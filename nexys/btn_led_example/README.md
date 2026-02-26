@@ -1,3 +1,17 @@
+## Claude Code Prompt
+
+Bu projeyi sifirdan olusturmak, derlemek ve karta yuklemek icin asagidaki prompt'u kullanabilirsiniz:
+
+```
+[ISTERLER.md dosya yolu] dosyasini oku. Masaustume bu isterlere gore
+Nexys Video FPGA projesi olustur (btn_led_top.v, nexys_video_btn_led.xdc,
+build_and_program.tcl, README.md). Sonra Vivado ile sentez, implementation ve
+bitstream uret. Bitstream hazir olunca Vivado GUI'yi Hardware Manager acik
+sekilde baslat ki karti programlayabileyim.
+```
+
+---
+
 # Buton ile LED Kontrol Sistemi - Nexys Video
 
 ## Proje Bilgileri
