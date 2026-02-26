@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2025.1 (64-bit)
+# SW Build 6140274 on Wed May 21 22:58:25 MDT 2025
+# IP Build 6138677 on Thu May 22 03:10:11 MDT 2025
+# SharedData Build 6139179 on Tue May 20 17:58:58 MDT 2025
+# Start of session at: Mon Feb 16 15:04:03 2026
+# Process ID         : 2643029
+# Current directory  : /home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.runs/rgb2dvi_0_synth_1
+# Command line       : vivado -log rgb2dvi_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source rgb2dvi_0.tcl
+# Log file           : /home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.runs/rgb2dvi_0_synth_1/rgb2dvi_0.vds
+# Journal file       : /home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.runs/rgb2dvi_0_synth_1/vivado.jou
+# Running On         : testpc-MS-7D98
+# Platform           : Ubuntu
+# Operating System   : Ubuntu 22.04.5 LTS
+# Processor Detail   : Intel(R) Core(TM) i7-14700K
+# CPU Frequency      : 5500.000 MHz
+# CPU Physical cores : 20
+# CPU Logical cores  : 28
+# Host memory        : 33413 MB
+# Swap memory        : 2147 MB
+# Total Virtual      : 35560 MB
+# Available Virtual  : 14518 MB
+#-----------------------------------------------------------
+source rgb2dvi_0.tcl -notrace

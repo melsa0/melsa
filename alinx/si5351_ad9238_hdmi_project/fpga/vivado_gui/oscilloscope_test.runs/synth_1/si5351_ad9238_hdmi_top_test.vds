@@ -1,0 +1,341 @@
+#-----------------------------------------------------------
+# Vivado v2025.1 (64-bit)
+# SW Build 6140274 on Wed May 21 22:58:25 MDT 2025
+# IP Build 6138677 on Thu May 22 03:10:11 MDT 2025
+# SharedData Build 6139179 on Tue May 20 17:58:58 MDT 2025
+# Start of session at: Mon Feb 16 16:38:49 2026
+# Process ID         : 2858306
+# Current directory  : /home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.runs/synth_1
+# Command line       : vivado -log si5351_ad9238_hdmi_top_test.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source si5351_ad9238_hdmi_top_test.tcl
+# Log file           : /home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.runs/synth_1/si5351_ad9238_hdmi_top_test.vds
+# Journal file       : /home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.runs/synth_1/vivado.jou
+# Running On         : testpc-MS-7D98
+# Platform           : Ubuntu
+# Operating System   : Ubuntu 22.04.5 LTS
+# Processor Detail   : Intel(R) Core(TM) i7-14700K
+# CPU Frequency      : 800.000 MHz
+# CPU Physical cores : 20
+# CPU Logical cores  : 28
+# Host memory        : 33413 MB
+# Swap memory        : 2147 MB
+# Total Virtual      : 35560 MB
+# Available Virtual  : 18895 MB
+#-----------------------------------------------------------
+source si5351_ad9238_hdmi_top_test.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/home/testpc/fpga_asist_dev/validation_test/ax7010_fpga/18_ad9238_hdmi/auto_create_project/my_ip'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/tools/Xilinx/2025.1/Vivado/data/ip'.
+Command: read_checkpoint -auto_incremental -incremental /home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.srcs/utils_1/imports/synth_1/si5351_ad9238_hdmi_top_test.dcp
+INFO: [Vivado 12-5825] Read reference checkpoint from /home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.srcs/utils_1/imports/synth_1/si5351_ad9238_hdmi_top_test.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top si5351_ad9238_hdmi_top_test -part xc7z010clg400-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7z010'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z010'
+INFO: [Device 21-403] Loading part xc7z010clg400-1
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 7 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 2858375
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 2243.777 ; gain = 440.711 ; free physical = 7498 ; free virtual = 16781
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'si5351_ad9238_hdmi_top_test' [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/src/top_simplified.v:8]
+INFO: [Synth 8-6157] synthesizing module 'clk_wiz_0' [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.runs/synth_1/.Xil/Vivado-2858306-testpc-MS-7D98/realtime/clk_wiz_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'clk_wiz_0' (0#1) [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.runs/synth_1/.Xil/Vivado-2858306-testpc-MS-7D98/realtime/clk_wiz_0_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'test_square_wave_gen' [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/src/test_square_wave_gen.v:8]
+	Parameter CLK_FREQ_MHZ bound to: 65 - type: integer 
+	Parameter WAVE_FREQ_KHZ bound to: 100 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'test_square_wave_gen' (0#1) [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/src/test_square_wave_gen.v:8]
+INFO: [Synth 8-6157] synthesizing module 'waveform_display' [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/src/waveform_display.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'waveform_display' (0#1) [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/src/waveform_display.v:7]
+INFO: [Synth 8-6157] synthesizing module 'rgb2dvi_0' [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.runs/synth_1/.Xil/Vivado-2858306-testpc-MS-7D98/realtime/rgb2dvi_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'rgb2dvi_0' (0#1) [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.runs/synth_1/.Xil/Vivado-2858306-testpc-MS-7D98/realtime/rgb2dvi_0_stub.v:6]
+WARNING: [Synth 8-7071] port 'oen' of module 'rgb2dvi_0' is unconnected for instance 'hdmi_encoder' [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/src/top_simplified.v:107]
+WARNING: [Synth 8-7023] instance 'hdmi_encoder' of module 'rgb2dvi_0' has 12 connections declared, but only 11 given [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/src/top_simplified.v:107]
+INFO: [Synth 8-6155] done synthesizing module 'si5351_ad9238_hdmi_top_test' (0#1) [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/src/top_simplified.v:8]
+WARNING: [Synth 8-3917] design si5351_ad9238_hdmi_top_test has port hdmi_oen driven by constant 1
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 2326.746 ; gain = 523.680 ; free physical = 7455 ; free virtual = 16738
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 2341.590 ; gain = 538.523 ; free physical = 7455 ; free virtual = 16738
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 2341.590 ; gain = 538.523 ; free physical = 7455 ; free virtual = 16738
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 2341.590 ; gain = 0.000 ; free physical = 7455 ; free virtual = 16738
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.gen/sources_1/ip/clk_wiz_0/clk_wiz_0/clk_wiz_0_in_context.xdc] for cell 'pll_inst'
+Finished Parsing XDC File [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.gen/sources_1/ip/clk_wiz_0/clk_wiz_0/clk_wiz_0_in_context.xdc] for cell 'pll_inst'
+Parsing XDC File [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.gen/sources_1/ip/rgb2dvi_0/rgb2dvi_0/rgb2dvi_0_in_context.xdc] for cell 'hdmi_encoder'
+Finished Parsing XDC File [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.gen/sources_1/ip/rgb2dvi_0/rgb2dvi_0/rgb2dvi_0_in_context.xdc] for cell 'hdmi_encoder'
+Parsing XDC File [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/constraints/pins.xdc]
+WARNING: [Vivado 12-627] No clocks matched 'clk_out1_clk_wiz_0'. [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/constraints/pins.xdc:25]
+INFO: [Vivado 12-626] No clocks found. Please use 'create_clock' or 'create_generated_clock' command to create clocks. [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/constraints/pins.xdc:25]
+WARNING: [Vivado 12-627] No clocks matched 'hdmi_encoder/U0/SerialClk'. [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/constraints/pins.xdc:25]
+INFO: [Vivado 12-626] No clocks found. Please use 'create_clock' or 'create_generated_clock' command to create clocks. [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/constraints/pins.xdc:25]
+WARNING: [Vivado 12-627] No clocks matched 'hdmi_encoder/U0/SerialClk'. [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/constraints/pins.xdc:26]
+INFO: [Vivado 12-626] No clocks found. Please use 'create_clock' or 'create_generated_clock' command to create clocks. [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/constraints/pins.xdc:26]
+WARNING: [Vivado 12-627] No clocks matched 'clk_out1_clk_wiz_0'. [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/constraints/pins.xdc:26]
+INFO: [Vivado 12-626] No clocks found. Please use 'create_clock' or 'create_generated_clock' command to create clocks. [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/constraints/pins.xdc:26]
+Finished Parsing XDC File [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/constraints/pins.xdc]
+WARNING: [Project 1-498] One or more constraints failed evaluation while reading constraint file [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/constraints/pins.xdc] and the design contains unresolved black boxes. These constraints will be read post-synthesis (as long as their source constraint file is marked as used_in_implementation) and should be applied correctly then. You should review the constraints listed in the file [.Xil/si5351_ad9238_hdmi_top_test_propImpl.xdc] and check the run log file to verify that these constraints were correctly applied.
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/constraints/pins.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/si5351_ad9238_hdmi_top_test_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/si5351_ad9238_hdmi_top_test_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Parsing XDC File [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.runs/synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.runs/synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2467.328 ; gain = 0.000 ; free physical = 7440 ; free virtual = 16726
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2467.363 ; gain = 0.000 ; free physical = 7440 ; free virtual = 16726
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2467.363 ; gain = 664.297 ; free physical = 7458 ; free virtual = 16757
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7z010clg400-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2475.332 ; gain = 672.266 ; free physical = 7458 ; free virtual = 16757
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 2475.332 ; gain = 672.266 ; free physical = 7462 ; free virtual = 16761
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2475.332 ; gain = 672.266 ; free physical = 7462 ; free virtual = 16762
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input   32 Bit       Adders := 1     
+	   2 Input   12 Bit       Adders := 2     
+	   2 Input   11 Bit       Adders := 1     
+	   2 Input   10 Bit       Adders := 1     
+	   2 Input    9 Bit       Adders := 1     
++---Registers : 
+	               24 Bit    Registers := 1     
+	               12 Bit    Registers := 1     
+	               11 Bit    Registers := 3     
+	               10 Bit    Registers := 4     
+	                9 Bit    Registers := 1     
+	                1 Bit    Registers := 3     
++---RAMs : 
+	              10K Bit	(1024 X 10 bit)          RAMs := 1     
++---Muxes : 
+	   2 Input   32 Bit        Muxes := 1     
+	   4 Input   23 Bit        Muxes := 1     
+	   2 Input   12 Bit        Muxes := 1     
+	   2 Input   11 Bit        Muxes := 2     
+	   2 Input    1 Bit        Muxes := 1     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 80 (col length:40)
+BRAMs: 120 (col length: RAMB18 40 RAMB36 20)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+DSP Report: Generating DSP display_inst/sample_y0, operation Mode is: A*(B:0x2d0).
+DSP Report: operator display_inst/sample_y0 is absorbed into DSP display_inst/sample_y0.
+WARNING: [Synth 8-3917] design si5351_ad9238_hdmi_top_test has port hdmi_oen driven by constant 1
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 2475.332 ; gain = 672.266 ; free physical = 7453 ; free virtual = 16758
+---------------------------------------------------------------------------------
+ Sort Area is  display_inst/sample_y0_0 : 0 0 : 160 160 : Used 1 time 0
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Preliminary Mapping Report (see note below)
++----------------------------+-------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name                 | RTL Object        | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++----------------------------+-------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|si5351_ad9238_hdmi_top_test | sample_buffer_reg | 1 K x 10(NO_CHANGE)    | W |   | 1 K x 10(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      | 
++----------------------------+-------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+Note: The table above is a preliminary report that shows the Block RAMs at the current stage of the synthesis flow. Some Block RAMs may be reimplemented as non Block RAM primitives later in the synthesis flow. Multiple instantiated Block RAMs are reported only once. 
+
+DSP: Preliminary Mapping Report (see note below. The ' indicates corresponding REG is set)
++-----------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name      | DSP Mapping | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++-----------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|waveform_display | A*(B:0x2d0) | 10     | 10     | -      | -      | 20     | 0    | 0    | -    | -    | -     | 0    | 0    | 
++-----------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+Note: The table above is a preliminary report that shows the DSPs inferred at the current stage of the synthesis flow. Some DSP may be reimplemented as non DSP primitives later in the synthesis flow. Multiple instantiated DSPs are reported only once.
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2550.332 ; gain = 747.266 ; free physical = 7342 ; free virtual = 16646
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 2584.379 ; gain = 781.312 ; free physical = 7312 ; free virtual = 16616
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Final Mapping Report
++----------------------------+-------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name                 | RTL Object        | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++----------------------------+-------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|si5351_ad9238_hdmi_top_test | sample_buffer_reg | 1 K x 10(NO_CHANGE)    | W |   | 1 K x 10(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      | 
++----------------------------+-------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 2584.379 ; gain = 781.312 ; free physical = 7312 ; free virtual = 16616
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2740.191 ; gain = 937.125 ; free physical = 7177 ; free virtual = 16480
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2740.191 ; gain = 937.125 ; free physical = 7177 ; free virtual = 16480
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2740.191 ; gain = 937.125 ; free physical = 7177 ; free virtual = 16480
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2740.191 ; gain = 937.125 ; free physical = 7177 ; free virtual = 16480
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2743.160 ; gain = 940.094 ; free physical = 7177 ; free virtual = 16480
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2743.160 ; gain = 940.094 ; free physical = 7177 ; free virtual = 16480
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+DSP Final Report (the ' indicates corresponding REG is set)
++-----------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name      | DSP Mapping | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++-----------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|waveform_display | A*B         | 10     | 10     | -      | -      | 20     | 0    | 0    | -    | -    | -     | 0    | 0    | 
++-----------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+
+Report BlackBoxes: 
++------+--------------+----------+
+|      |BlackBox name |Instances |
++------+--------------+----------+
+|1     |clk_wiz_0     |         1|
+|2     |rgb2dvi_0     |         1|
++------+--------------+----------+
+
+Report Cell Usage: 
++------+---------+------+
+|      |Cell     |Count |
++------+---------+------+
+|1     |clk_wiz  |     1|
+|2     |rgb2dvi  |     1|
+|3     |CARRY4   |    23|
+|4     |DSP48E1  |     1|
+|5     |LUT1     |    20|
+|6     |LUT2     |    45|
+|7     |LUT3     |    30|
+|8     |LUT4     |    39|
+|9     |LUT5     |    42|
+|10    |LUT6     |    62|
+|11    |RAMB18E1 |     1|
+|12    |FDCE     |    50|
+|13    |FDRE     |    31|
+|14    |IBUF     |     1|
+|15    |OBUF     |     2|
++------+---------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2743.160 ; gain = 940.094 ; free physical = 7177 ; free virtual = 16480
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 2 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 2743.160 ; gain = 814.320 ; free physical = 7177 ; free virtual = 16480
+Synthesis Optimization Complete : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2743.168 ; gain = 940.094 ; free physical = 7177 ; free virtual = 16480
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2743.168 ; gain = 0.000 ; free physical = 7179 ; free virtual = 16482
+INFO: [Netlist 29-17] Analyzing 25 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2799.188 ; gain = 0.000 ; free physical = 7352 ; free virtual = 16655
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: 7301a88c
+INFO: [Common 17-83] Releasing license: Synthesis
+38 Infos, 10 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:15 ; elapsed = 00:00:14 . Memory (MB): peak = 2799.223 ; gain = 1161.570 ; free physical = 7351 ; free virtual = 16654
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 1917.996; main = 1837.361; forked = 242.666
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 3555.066; main = 2799.191; forked = 970.684
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2823.199 ; gain = 0.000 ; free physical = 7351 ; free virtual = 16654
+INFO: [Common 17-1381] The checkpoint '/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.runs/synth_1/si5351_ad9238_hdmi_top_test.dcp' has been generated.
+INFO: [Vivado 12-24828] Executing command : report_utilization -file si5351_ad9238_hdmi_top_test_utilization_synth.rpt -pb si5351_ad9238_hdmi_top_test_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Mon Feb 16 16:39:06 2026...

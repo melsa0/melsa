@@ -1,0 +1,51 @@
+#-----------------------------------------------------------
+# Vivado v2025.1 (64-bit)
+# SW Build 6140274 on Wed May 21 22:58:25 MDT 2025
+# IP Build 6138677 on Thu May 22 03:10:11 MDT 2025
+# SharedData Build 6139179 on Tue May 20 17:58:58 MDT 2025
+# Start of session at: Mon Feb 16 14:51:55 2026
+# Process ID         : 2637469
+# Current directory  : /home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_project_test/oscilloscope_test.runs/synth_1
+# Command line       : vivado -log si5351_ad9238_hdmi_top_test.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source si5351_ad9238_hdmi_top_test.tcl
+# Log file           : /home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_project_test/oscilloscope_test.runs/synth_1/si5351_ad9238_hdmi_top_test.vds
+# Journal file       : /home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_project_test/oscilloscope_test.runs/synth_1/vivado.jou
+# Running On         : testpc-MS-7D98
+# Platform           : Ubuntu
+# Operating System   : Ubuntu 22.04.5 LTS
+# Processor Detail   : Intel(R) Core(TM) i7-14700K
+# CPU Frequency      : 800.000 MHz
+# CPU Physical cores : 20
+# CPU Logical cores  : 28
+# Host memory        : 33413 MB
+# Swap memory        : 2147 MB
+# Total Virtual      : 35560 MB
+# Available Virtual  : 14180 MB
+#-----------------------------------------------------------
+source si5351_ad9238_hdmi_top_test.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/home/testpc/fpga_asist_dev/validation_test/ax7010_fpga/18_ad9238_hdmi/auto_create_project/my_ip'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/tools/Xilinx/2025.1/Vivado/data/ip'.
+Command: synth_design -top si5351_ad9238_hdmi_top_test -part xc7z010clg400-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7z010'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z010'
+INFO: [Device 21-403] Loading part xc7z010clg400-1
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 7 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 2637551
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 2242.785 ; gain = 439.742 ; free physical = 652 ; free virtual = 12357
+---------------------------------------------------------------------------------
+ERROR: [Synth 8-9210] cannot access memory 'sample_buffer' directly [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/src/top_simplified.v:87]
+INFO: [Synth 8-10285] module 'si5351_ad9238_hdmi_top_test' is ignored due to previous errors [/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/src/top_simplified.v:112]
+INFO: [Synth 8-9084] Verilog file '/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/src/top_simplified.v' ignored due to errors
+ERROR: [Synth 8-12188] Failed to read verilog '/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/src/top_simplified.v'
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 2315.754 ; gain = 512.711 ; free physical = 563 ; free virtual = 12262
+---------------------------------------------------------------------------------
+RTL Elaboration failed
+INFO: [Common 17-83] Releasing license: Synthesis
+11 Infos, 0 Warnings, 0 Critical Warnings and 3 Errors encountered.
+synth_design failed
+ERROR: [Common 17-69] Command failed: Synthesis failed - please see the console or run log file for details
+INFO: [Common 17-206] Exiting Vivado at Mon Feb 16 14:52:01 2026...

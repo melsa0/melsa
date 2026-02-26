@@ -1,0 +1,245 @@
+/*
+
+AMD Vivado v2025.1 (64-bit) [Major: 2025, Minor: 1]
+SW Build: 6140274 on Wed May 21 22:58:25 MDT 2025
+IP Build: 6138677 on Thu May 22 03:10:11 MDT 2025
+IP Build: 6138677 on Thu May 22 03:10:11 MDT 2025
+
+Process ID (PID): 2780597
+License: Customer
+Mode: GUI Mode
+
+Current time: 	Mon Feb 16 16:14:19 TRT 2026
+Time zone: 	Turkey Time (Europe/Istanbul)
+
+OS: Ubuntu
+OS Version: 6.8.0-90-generic
+OS Architecture: amd64
+Available processors (cores): 28
+LSB Release Description: Ubuntu 22.04.5 LTS
+
+Display: 1
+Screen size: 1920x1080
+Local screen bounds: x = 70, y = 27, width = 1850, height = 1053
+Screen resolution (DPI): 100
+Available screens: 1
+Default font: family=Dialog,name=Dialog,style=plain,size=12
+Scale size: 12
+OS font scaling: 100%
+Anti-Alias Enabled: false
+
+Java version: 	21.0.1 64-bit
+
+Java home: 	/tools/Xilinx/2025.1/tps/lnx64/jre21.0.1_12
+Java executable: 	/tools/Xilinx/2025.1/tps/lnx64/jre21.0.1_12/bin/java
+Java arguments: 	[-Dsun.java2d.pmoffscreen=false, -Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2, -Dsun.java2d.xrender=false, -Dsun.java2d.uiScale.enabled=false, -Dswing.aatext=true, -XX:-UsePerfData, -Djdk.map.althashing.threshold=512, -XX:StringTableSize=4072, -XX:+UseStringDeduplication, -XX:MaxGCPauseMillis=200, -XX:ParallelGCThreads=4, -XX:+ParallelRefProcEnabled, --add-opens=java.desktop/javax.swing.plaf.synth=ALL-UNNAMED, --add-opens=java.base/java.nio=ALL-UNNAMED, --add-opens=java.desktop/sun.swing=ALL-UNNAMED, --add-opens=java.desktop/javax.swing=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.tree=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.plaf.synth=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED, --add-opens=java.desktop/javax.swing=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.tree=ALL-UNNAMED, --add-opens=java.desktop/java.awt.event=ALL-UNNAMED, --add-opens=java.desktop/sun.awt.X11=ALL-UNNAMED, --add-exports=java.desktop/javax.swing.plaf.synth=ALL-UNNAMED, --add-exports=java.base/java.nio=ALL-UNNAMED, --add-exports=java.desktop/sun.swing=ALL-UNNAMED, --add-exports=java.desktop/javax.swing=ALL-UNNAMED, --add-exports=java.desktop/javax.swing.tree=ALL-UNNAMED, --add-exports=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED, --add-exports=java.desktop/sun.swing=ALL-UNNAMED, --add-exports=java.desktop/sun.swing.table=ALL-UNNAMED, --add-exports=java.desktop/sun.swing.plaf.synth=ALL-UNNAMED, --add-exports=java.desktop/sun.awt.shell=ALL-UNNAMED, --add-exports=java.base/sun.security.action=ALL-UNNAMED, --add-exports=java.desktop/sun.font=ALL-UNNAMED, --add-opens=java.desktop/sun.awt.X11=ALL-UNNAMED, -XX:NewSize=80m, -XX:MaxNewSize=80m, -Xms812m, -Xmx6144m, -Xss10m, -Xrs]
+Java initial memory (-Xms): 	812 MB
+Java maximum memory (-Xmx):	 6 GB
+
+User name: 	testpc
+User home directory: /home/testpc
+User working directory: /home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga
+User country: 	US
+User language: 	en
+User locale: 	en_US
+
+RDI_BASEROOT: /tools/Xilinx/2025.1
+HDI_APPROOT: /tools/Xilinx/2025.1/Vivado
+RDI_DATADIR: /tools/Xilinx/2025.1/SharedData/data:/tools/Xilinx/2025.1/Vivado/data
+RDI_BINDIR: /tools/Xilinx/2025.1/Vivado/bin
+
+Vivado preferences file: /home/testpc/.Xilinx/Vivado/2025.1/vivado.xml
+Vivado preferences directory: /home/testpc/.Xilinx/Vivado/2025.1/
+Vivado layouts directory: /home/testpc/.Xilinx/Vivado/2025.1/data/layouts
+PlanAhead jar file: 	/tools/Xilinx/2025.1/Vivado/lib/classes/planAhead.jar
+Vivado log file: 	/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado.log
+Vivado journal file: 	/home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado.jou
+Engine tmp dir: 	./.Xil/Vivado-2780597-testpc-MS-7D98
+Non-Default Parameters:	[]
+
+Xilinx & AMD Environment Variables
+--------------------------------------------------------------------------------------------
+GNOME_SHELL_SESSION_MODE: ubuntu
+RDI_APPROOT: /tools/Xilinx/2025.1/Vivado
+RDI_BASEROOT: /tools/Xilinx/2025.1
+RDI_BINROOT: /tools/Xilinx/2025.1/Vivado/bin
+RDI_BUILD: yes
+RDI_DATADIR: /tools/Xilinx/2025.1/SharedData/data:/tools/Xilinx/2025.1/Vivado/data
+RDI_INSTALLROOT: /tools/Xilinx
+RDI_INSTALLVER: Vivado
+RDI_JAVA_PLATFORM: 
+RDI_JAVA_VERSION: 21.0.1_12
+RDI_LIBDIR: /tools/Xilinx/2025.1/Vivado/lib/lnx64.o/Ubuntu/22:/tools/Xilinx/2025.1/Vivado/lib/lnx64.o/Ubuntu:/tools/Xilinx/2025.1/Vivado/lib/lnx64.o
+RDI_OPT_EXT: .o
+RDI_PATCHROOT: 
+RDI_PLATFORM: lnx64
+RDI_PREPEND_PATH: /tools/Xilinx/2025.1/Vitis/bin:/tools/Xilinx/2025.1/Vivado/ids_lite/ISE/bin/lin64
+RDI_PROG: /tools/Xilinx/2025.1/Vivado/bin/unwrapped/lnx64.o/vivado
+RDI_SESSION_INFO: /home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga:testpc-MS-7D98_1771247650_2780547
+RDI_SHARED_DATA: /tools/Xilinx/2025.1/SharedData/data
+RDI_TPS_ROOT: /tools/Xilinx/2025.1/Vivado/tps/lnx64
+RDI_USE_JDK21: True
+SHELL: /bin/bash
+XILINX: /tools/Xilinx/2025.1/Vivado/ids_lite/ISE
+XILINX_DSP: /tools/Xilinx/2025.1/Vivado/ids_lite/ISE
+XILINX_HLS: /tools/Xilinx/2025.1/Vitis
+XILINX_PLANAHEAD: /tools/Xilinx/2025.1/Vivado
+XILINX_SDK: /tools/Xilinx/2025.1/Vitis
+XILINX_VITIS: /tools/Xilinx/2025.1/Vitis
+XILINX_VIVADO: /tools/Xilinx/2025.1/Vivado
+
+
+GUI allocated memory:	812 MB
+GUI max memory:		6,144 MB
+Engine allocated memory: 2,430 MB
+
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+
+*/
+
+// TclEventType: START_GUI
+// TclEventType: START_PROGRESS_DIALOG
+// Tcl Message: start_gui 
+// TclEventType: START_PROGRESS_DIALOG
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// TclEventType: FLOW_ADDED
+// TclEventType: MSGMGR_MOVEMSG
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: FILE_SET_NEW
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_CURRENT
+// TclEventType: PROJECT_DASHBOARD_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: PROJECT_NEW
+// [GUI Memory]: 95 MB (+97483kb) [00:00:03]
+// [Engine Memory]: 2,021 MB (+1967467kb) [00:00:03]
+// [GUI Memory]: 137 MB (+38236kb) [00:00:04]
+// [Engine Memory]: 2,156 MB (+35883kb) [00:00:04]
+// Tcl Message: source open_gui.tcl 
+// Tcl Message: # puts "=========================================" 
+// Tcl Message: ========================================= 
+// Tcl Message: # puts "Opening Vivado GUI" 
+// Tcl Message: Opening Vivado GUI 
+// Tcl Message: # puts "=========================================" 
+// Tcl Message: ========================================= 
+// Tcl Message: # open_project vivado_gui/oscilloscope_test.xpr 
+// Tcl Message: Scanning sources... Finished scanning sources 
+// Tcl Message: INFO: [IP_Flow 19-234] Refreshing IP repositories INFO: [IP_Flow 19-1700] Loaded user IP repository '/home/testpc/fpga_asist_dev/validation_test/ax7010_fpga/18_ad9238_hdmi/auto_create_project/my_ip'. INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/tools/Xilinx/2025.1/Vivado/data/ip'. 
+// Tcl Message: # set_property board_part "" [current_project] # puts "\nOpening implemented design..." 
+// Tcl Message:  Opening implemented design... 
+// Tcl Message: # open_run impl_1 
+// HMemoryUtils.trashcanNow. Engine heap size: 2,491 MB. GUI used memory: 72 MB. Current time: 2/16/26, 4:14:20 PM TRT
+// TclEventType: SDC_CONSTRAINT_ADD
+// TclEventType: POWER_CNS_STALE
+// TclEventType: SDC_CONSTRAINT_ADD
+// TclEventType: PLACEDB_MODIFY_PRE
+// TclEventType: SDC_CONSTRAINT_ADD
+// TclEventType: FLOORPLAN_MODIFY
+// TclEventType: DESIGN_NEW
+// HMemoryUtils.trashcanNow. Engine heap size: 2,917 MB. GUI used memory: 72 MB. Current time: 2/16/26, 4:14:21 PM TRT
+// [Engine Memory]: 2,927 MB (+695119kb) [00:00:09]
+// [Engine Memory]: 3,093 MB (+20977kb) [00:00:09]
+// TclEventType: HFED_INIT_ROUTE_STORAGE_COMPLETED
+// TclEventType: DESIGN_NEW
+// [GUI Memory]: 149 MB (+5860kb) [00:00:10]
+// DeviceView Instantiated
+// TclEventType: CURR_DESIGN_SET
+// [GUI Memory]: 163 MB (+6912kb) [00:00:10]
+// Tcl Message: INFO: [Device 21-403] Loading part xc7z010clg400-1 
+// Tcl Message: Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 10294.961 ; gain = 0.000 ; free physical = 9814 ; free virtual = 19059 
+// Tcl Message: INFO: [Netlist 29-17] Analyzing 32 Unisim elements for replacement INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds INFO: [Project 1-479] Netlist was created with Vivado 2025.1 INFO: [Project 1-570] Preparing netlist for logic optimization 
+// Tcl Message: Read ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 10349.867 ; gain = 0.000 ; free physical = 9775 ; free virtual = 19021 
+// Tcl Message: INFO: [Timing 38-478] Restoring timing data from binary archive. INFO: [Timing 38-479] Binary timing data restore complete. INFO: [Project 1-856] Restoring constraints from binary archive. INFO: [Project 1-853] Binary constraint restore complete. INFO: [Designutils 20-5722] Start Reading Physical Databases. 
+// Tcl Message: Reading placement. 
+// Tcl Message: Read Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 10868.289 ; gain = 0.000 ; free physical = 9362 ; free virtual = 18585 
+// Tcl Message: Reading placer database... 
+// Tcl Message: Read Device Cache: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 10868.289 ; gain = 0.000 ; free physical = 9362 ; free virtual = 18585 Read PlaceDB: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 10868.289 ; gain = 0.000 ; free physical = 9362 ; free virtual = 18585 Read PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 10868.289 ; gain = 0.000 ; free physical = 9362 ; free virtual = 18585 
+// Tcl Message: Reading routing. 
+// Tcl Message: Read RouteStorage: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 10868.289 ; gain = 0.000 ; free physical = 9362 ; free virtual = 18585 Read Physdb Files: Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.03 . Memory (MB): peak = 10868.289 ; gain = 0.000 ; free physical = 9362 ; free virtual = 18585 
+// Tcl Message: Restored from archive | CPU: 0.030000 secs | Memory: 0.662819 MB | 
+// Tcl Message: Finished XDEF File Restore: Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.03 . Memory (MB): peak = 10868.289 ; gain = 0.000 ; free physical = 9362 ; free virtual = 18585 Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 10868.289 ; gain = 0.000 ; free physical = 9362 ; free virtual = 18585 
+// Tcl Message: INFO: [Project 1-111] Unisim Transformation Summary: No Unisim elements were transformed.  
+// Device view-level: 0.0
+// TclEventType: CURR_DESIGN_SET
+// TclEventType: STOP_PROGRESS_DIALOG
+// Tcl Message: open_run: Time (s): cpu = 00:00:10 ; elapsed = 00:00:06 . Memory (MB): peak = 11143.609 ; gain = 999.449 ; free physical = 9096 ; free virtual = 18331 
+// Tcl Message: # puts "\n=========================================" 
+// Tcl Message:  ========================================= 
+// Tcl Message: # puts "✅ GUI READY - Implemented Design Loaded" 
+// Tcl Message: ✅ GUI READY - Implemented Design Loaded 
+// Tcl Message: # puts "=========================================" 
+// Tcl Message: ========================================= 
+// Tcl Message: # puts "\nBitstream Location:" 
+// Tcl Message:  Bitstream Location: 
+// Tcl Message: # puts "  vivado_gui/oscilloscope_test.runs/impl_1/si5351_ad9238_hdmi_top_test.bit" 
+// Tcl Message:   vivado_gui/oscilloscope_test.runs/impl_1/si5351_ad9238_hdmi_top_test.bit 
+// Tcl Message: # puts "\nTiming Summary:" 
+// Tcl Message:  Timing Summary: 
+// Tcl Message: # puts "  WNS: 1.955 ns (PASS)" 
+// Tcl Message:   WNS: 1.955 ns (PASS) 
+// Tcl Message: # puts "  TNS: 0.000 ns (PASS)" 
+// Tcl Message:   TNS: 0.000 ns (PASS) 
+// Tcl Message: # puts "  All timing constraints met!" 
+// Tcl Message:   All timing constraints met! 
+// Tcl Message: # puts "\nNext Steps:" 
+// Tcl Message:  Next Steps: 
+// Tcl Message: # puts "  1. Flow Navigator → Program and Debug → Open Hardware Manager" 
+// Tcl Message:   1. Flow Navigator → Program and Debug → Open Hardware Manager 
+// Tcl Message: # puts "  2. Connect to target → Auto Connect" 
+// Tcl Message:   2. Connect to target → Auto Connect 
+// Tcl Message: # puts "  3. Program Device → Select bitstream → Program" 
+// Tcl Message:   3. Program Device → Select bitstream → Program 
+// Tcl Message: # puts "=========================================" 
+// Tcl Message: ========================================= 
+dismissDialog("Sourcing Tcl script 'open_gui.tcl'"); // bk (Sourcing Tcl script 'open_gui.tcl' Progress)
+// TclEventType: STOP_PROGRESS_DIALOG
+// RouteApi: Init Delay Mediator Swing Worker Finished
+// TclEventType: DG_GRAPH_GENERATED
+// TclEventType: DG_GRAPH_GENERATED
+// Tcl Message: update_compile_order -fileset sources_1 
+// Elapsed time: 10 seconds
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "Project Summary", 0); // o (PlanAheadTabBaseWorkspace_JideTabbedPane)
+// [GUI Memory]: 171 MB (+94kb) [00:00:22]
+selectButton(PAResourceQtoS.RunGadget_SHOW_ERROR_AND_CRITICAL_WARNING_MESSAGES, "11 critical warnings"); // h (PAResourceQtoS.RunGadget_SHOW_ERROR_AND_CRITICAL_WARNING_MESSAGES)
+// Run Command: PAResourceCommand.PACommandNames_MESSAGE_WINDOW
+selectTab((HResource) null, (HResource) null, "Reports", 3); // ab
+selectTab((HResource) null, (HResource) null, "Design Runs", 4); // ab
+selectButton(PAResourceQtoS.RunGadget_SHOW_ERROR_AND_CRITICAL_WARNING_MESSAGES, "11 critical warnings"); // h (PAResourceQtoS.RunGadget_SHOW_ERROR_AND_CRITICAL_WARNING_MESSAGES)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Implementation, Opt Design, [Timing 38-249] Generated clock hdmi_encoder/U0/SerialClk has no logical paths from master clock clk_out1_clk_wiz_0.. Resolution: Review the path between the master clock and the generated clock with the schematic viewer and correct the -source option. If it is correct and the master clock does not have a timing path to the generated clock, define the generated clock as a primary clock by using create_clock.. ]", 2, true); // u.d (PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE) - Node
+// Elapsed time: 75 seconds
+selectButton(PAResourceQtoS.RunGadget_SHOW_ERROR_AND_CRITICAL_WARNING_MESSAGES, "11 critical warnings"); // h (PAResourceQtoS.RunGadget_SHOW_ERROR_AND_CRITICAL_WARNING_MESSAGES)
+selectButton(PAResourceQtoS.RunGadget_SHOW_WARNING_AND_ERROR_MESSAGES_IN_MESSAGES, "1 warning"); // h (PAResourceQtoS.RunGadget_SHOW_WARNING_AND_ERROR_MESSAGES_IN_MESSAGES)
+selectButton(PAResourceQtoS.RunGadget_SHOW_WARNING_AND_ERROR_MESSAGES_IN_MESSAGES, "12 warnings"); // h (PAResourceQtoS.RunGadget_SHOW_WARNING_AND_ERROR_MESSAGES_IN_MESSAGES)
+selectButton(PAResourceQtoS.RunGadget_SELECT_RUN_AND_DISPLAY_PROPERTIES, "synth_1"); // h (PAResourceQtoS.RunGadget_SELECT_RUN_AND_DISPLAY_PROPERTIES)
+// Run Command: PAResourceCommand.PACommandNames_PROPERTIES_WINDOW
+// HMemoryUtils.trashcanNow. Engine heap size: 3,244 MB. GUI used memory: 106 MB. Current time: 2/16/26, 4:16:05 PM TRT
+selectButton(PAResourceQtoS.RunGadget_SHOW_WARNING_AND_ERROR_MESSAGES_IN_MESSAGES, "12 warnings"); // h (PAResourceQtoS.RunGadget_SHOW_WARNING_AND_ERROR_MESSAGES_IN_MESSAGES)
+// Run Command: PAResourceCommand.PACommandNames_MESSAGE_WINDOW
+selectButton((HResource) null, "RDIResource.FrameControlsPanel_FLOAT_Properties"); // P.a (RDIResource.FrameControlsPanel_FLOAT_Properties)
+floatFrame(RDIResource.RDIViews_PROPERTIES, "Properties"); // S (RDIResource.RDIViews_PROPERTIES, Properties)
+// RDIResource.RDIViews_PROPERTIES: Synthesis Run Properties: float view
+selectButton((HResource) null, "RDIResource.FrameControlsPanel_CLOSE_Properties"); // P.a (RDIResource.FrameControlsPanel_CLOSE_Properties)
+// RDIResource.RDIViews_PROPERTIES: Synthesis Run Properties: close view
+closeFrame(RDIResource.RDIViews_PROPERTIES, "Synthesis Run Properties"); // S (RDIResource.RDIViews_PROPERTIES, Properties)
+selectCheckBox(PAResourceItoN.MsgView_CRITICAL_WARNINGS, (String) null, true); // f (PAResourceItoN.MsgView_CRITICAL_WARNINGS): TRUE
+selectCheckBox(PAResourceItoN.MsgView_WARNING_MESSAGES, (String) null, false); // f (PAResourceItoN.MsgView_WARNING_MESSAGES): FALSE
+// TclEventType: FILE_SET_CHANGE
+// [Engine Memory]: 3,248 MB (+380kb) [00:02:48]

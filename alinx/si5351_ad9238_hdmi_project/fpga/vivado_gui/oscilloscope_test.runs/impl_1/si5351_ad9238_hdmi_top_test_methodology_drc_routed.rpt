@@ -1,0 +1,53 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2025.1 (lin64) Build 6140274 Wed May 21 22:58:25 MDT 2025
+| Date         : Mon Feb 16 16:39:31 2026
+| Host         : testpc-MS-7D98 running 64-bit Ubuntu 22.04.5 LTS
+| Command      : report_methodology -file si5351_ad9238_hdmi_top_test_methodology_drc_routed.rpt -pb si5351_ad9238_hdmi_top_test_methodology_drc_routed.pb -rpx si5351_ad9238_hdmi_top_test_methodology_drc_routed.rpx
+| Design       : si5351_ad9238_hdmi_top_test
+| Device       : xc7z010clg400-1
+| Speed File   : -1
+| Design State : Fully Routed
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Report Methodology
+
+Table of Contents
+-----------------
+1. REPORT SUMMARY
+2. REPORT DETAILS
+
+1. REPORT SUMMARY
+-----------------
+            Netlist: netlist
+          Floorplan: design_1
+      Design limits: <entire design considered>
+             Max checks: <unlimited>
+             Checks found: 3
++-----------+------------------+-------------------------------------------------------------+--------+
+| Rule      | Severity         | Description                                                 | Checks |
++-----------+------------------+-------------------------------------------------------------+--------+
+| TIMING-36 | Critical Warning | Invalid Generated Clock due to missing edge propagation     | 1      |
+| TIMING-30 | Warning          | Sub-optimal master source pin selection for generated clock | 1      |
+| XDCB-5    | Warning          | Runtime inefficient way to find pin objects                 | 1      |
++-----------+------------------+-------------------------------------------------------------+--------+
+
+2. REPORT DETAILS
+-----------------
+TIMING-36#1 Critical Warning
+Invalid Generated Clock due to missing edge propagation  
+There is no rising/falling edge propagation between master clock clk_out1_clk_wiz_0 to generated clock hdmi_encoder/U0/SerialClk
+Related violations: <none>
+
+TIMING-30#1 Warning
+Sub-optimal master source pin selection for generated clock  
+The generated clock hdmi_encoder/U0/SerialClk has a sub-optimal master source pin selection, timing can be pessimistic
+Related violations: <none>
+
+XDCB-5#1 Warning
+Runtime inefficient way to find pin objects  
+The option '-through : [get_pins -filter {NAME =~ *SyncAsync*/oSyncStages_reg[0]/D} -hier]' of constraint 'set_false_path' uses inefficient query to find pin objects (see constraint position '4' in the Timing Constraint window in Vivado IDE). To reduce runtime, it is recommended to get the pins through the cell objects. Please refer to Using Constraints Guide (Constraints Efficiency). An example of optimal query is: get_pins -filter {REF_PIN_NAME=~yy*} -of_objects [get_cells -hierarchical xx*].
+Current XDC: /home/testpc/fpga_asist_dev/validation_test/si5351_ad9238_hdmi_project/fpga/vivado_gui/oscilloscope_test.gen/sources_1/ip/rgb2dvi_0/src/rgb2dvi.xdc (Line: 5)
+Related violations: <none>
+
+

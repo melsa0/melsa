@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2025.1 (64-bit)
+# SW Build 6140274 on Thu May 22 00:12:29 MDT 2025
+# IP Build 6138677 on Thu May 22 03:10:11 MDT 2025
+# SharedData Build 6139179 on Tue May 20 17:58:58 MDT 2025
+# Start of session at: Tue Feb 17 14:41:47 2026
+# Process ID         : 20752
+# Current directory  : C:/Users/melsa
+# Command line       : vivado.exe -mode batch -source C:/Users/melsa/OneDrive/Desktop/fpga_asist_dev-master (1)/fpga_asist_dev-master/docs/si5351_ad9238_hdmi_project/fpga/build_project.tcl -log C:/Users/melsa/OneDrive/Desktop/fpga_asist_dev-master (1)/fpga_asist_dev-master/docs/si5351_ad9238_hdmi_project/fpga/vivado_build.log -journal C:/Users/melsa/OneDrive/Desktop/fpga_asist_dev-master (1)/fpga_asist_dev-master/docs/si5351_ad9238_hdmi_project/fpga/vivado_build.jou
+# Log file           : C:/Users/melsa/OneDrive/Desktop/fpga_asist_dev-master (1)/fpga_asist_dev-master/docs/si5351_ad9238_hdmi_project/fpga/vivado_build.log
+# Journal file       : C:/Users/melsa/OneDrive/Desktop/fpga_asist_dev-master (1)/fpga_asist_dev-master/docs/si5351_ad9238_hdmi_project/fpga/vivado_build.jou
+# Running On         : Melsa
+# Platform           : Windows Server 2016 or Windows 10
+# Operating System   : 26100
+# Processor Detail   : 11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz
+# CPU Frequency      : 2304 MHz
+# CPU Physical cores : 8
+# CPU Logical cores  : 16
+# Host memory        : 16908 MB
+# Swap memory        : 5905 MB
+# Total Virtual      : 22814 MB
+# Available Virtual  : 8974 MB
+#-----------------------------------------------------------
+source {C:/Users/melsa/OneDrive/Desktop/fpga_asist_dev-master (1)/fpga_asist_dev-master/docs/si5351_ad9238_hdmi_project/fpga/build_project.tcl}

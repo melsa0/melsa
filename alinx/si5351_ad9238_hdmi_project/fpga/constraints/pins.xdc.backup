@@ -1,0 +1,117 @@
+# SI5351 + AD9238 + HDMI Oscilloscope - Pin Constraints
+# Board: Alinx AX7010 (Zynq-7010)
+# FPGA: XC7Z010CLG400-1
+# AD9238 Board: J11 Connector üzerinden bağlı
+
+# ============================================================================
+# System Clock and Reset
+# ============================================================================
+
+# 50 MHz system clock
+set_property PACKAGE_PIN U18 [get_ports sys_clk]
+set_property IOSTANDARD LVCMOS33 [get_ports sys_clk]
+create_clock -period 20.000 -name sys_clk [get_ports sys_clk]
+
+# Reset button (active-low)
+set_property PACKAGE_PIN N15 [get_ports rst_n]
+set_property IOSTANDARD LVCMOS33 [get_ports rst_n]
+
+# ============================================================================
+# AD9238 ADC Interface - Channel 0 (J11 Connector)
+# ============================================================================
+# Not: AD9238 12-bit ADC, ama biz 10-bit kullanıyoruz (D0-D9)
+# SI5351 CLK0 → Voltage Divider → AD9238 AIN+ (Analog Input)
+
+# AD9238 Data Output Pins (10-bit parallel data - Channel 0)
+set_property PACKAGE_PIN J20 [get_ports {ad9238_data[0]}]
+set_property PACKAGE_PIN H20 [get_ports {ad9238_data[1]}]
+set_property PACKAGE_PIN L16 [get_ports {ad9238_data[2]}]
+set_property PACKAGE_PIN L17 [get_ports {ad9238_data[3]}]
+set_property PACKAGE_PIN M17 [get_ports {ad9238_data[4]}]
+set_property PACKAGE_PIN M18 [get_ports {ad9238_data[5]}]
+set_property PACKAGE_PIN D19 [get_ports {ad9238_data[6]}]
+set_property PACKAGE_PIN D20 [get_ports {ad9238_data[7]}]
+set_property PACKAGE_PIN E18 [get_ports {ad9238_data[8]}]
+set_property PACKAGE_PIN E19 [get_ports {ad9238_data[9]}]
+
+set_property IOSTANDARD LVCMOS33 [get_ports {ad9238_data[*]}]
+
+# Input buffePACKAGE_PIN N18 [get_ports tmds_clk_p]
+set_property IOSTANDARD TMDS_33 [get_ports tmds_clk_p]
+set_property IOSTANDARD TMDS_33 [get_ports tmds_clk_n]
+
+# ============================================================================
+# HDMI Output Pins
+# ============================================================================
+
+# HDMI Clock
+set_property hannel 0 (Blue)
+set_property PACKAGE_PIN V20 [get_ports {tmds_data_p[0]}]
+set_property IOSTANDARD TMDS_33 [get_ports {tmds_data_p[0]}]
+set_property IOSTANDARD TMDS_33 [get_ports {tmds_data_n[0]}]
+
+# HDMI Data Channel 1 (Green)
+set_property PACKAGE_PIN T20 [get_ports {tmds_data_p[1]}]
+set_property IOSTANDARD TMDS_33 [get_ports {tmds_data_p[1]}]
+set_property IOSTANDARD TMDS_33 [get_ports {tmds_data_n[1]}]
+
+# HDMI Data Channel 2 (Red)
+set_property PACKAGE_PIN N20 [get_ports {tmds_data_p[2]}]
+set_property IOSTANDARD TMDS_33  [get_ports hdmi_oen]
+
+# ============================================================================
+# Timing Constraints
+# ============================================================================
+
+# ADC sampling clockset_property -dict {PACKAGE_PIN B19 IOSTANDARD TMDS_33} [get_ports {tmds_data_p[2]}]
+set_property -dict {PACKAGE_PIN A20 IOSTANDARD TMDS_33} [get_ports {tmds_data_n[2]}]
+
+# HDMI Output Enable
+set_property -dict {PACKAGE_PIN F17 IOSTANDARD LVCMOS33} [get_ports hdmi_oen]
+ (65 MHz)
+# Not: PLL'den gelecek - IP oluşturulduktan sonra pin adı değişebilir
+# create_generated_clock -name adc_clk -source [get_pins clk_wiz_inst/clk_out3] \
+#     -divide_by 1 [get_ports ad9238_encode]
+
+# Video pixel clock (74.25 MHz) - 720p için
+# create_generated_clock -name video_clk -source [get_pins clk_wiz_inst/clk_out1] \
+#     -divide_by 1 [get_pins clk_wiz_inst/clk_out1]
+
+# TMDS 5x clock (371.25 MHz)
+# create_generated_clock -name video_clk5x -source [get_pins clk_wiz_inst/clk_out2] \
+#     -divide_by 1 [get_pins clk_wiz_inst/clk_out2]
+
+# Clock domain crossings için false path
+# set_false_path -from [get_clocks adc_clk] -to [get_clocks video_clk]
+# set_false_path -from [get_bu projede AD9238 kullanılmıyor, test sinyali internal)
+# set_input_delay -clock [get_clocks adc_clk] -min 1.0 [get_ports ad9238_data[*]]
+# set_input_delay -clock [get_clocks adc_clk] -max 4.5 [get_ports ad9238_data[*]
+set_output_delay -clock [get_clocks adc_clk] -min -1.0 [get_ports ad9238_encode]
+set_output_delay -clock [get_clocks adc_clk] -max 1.0 [get_ports ad9238_encode]
+
+# ============================================================================
+# IO Standards and Drive Strength
+# ============================================================================
+
+# ADC data girişleri için hızlı IO
+set_property SLEW FAST [get_ports ad9238_data[*]]
+set_property SLEW FAST [get_ports ad9238_encode]
+
+# HDMI çıkışları için drive strength
+set_property DRIVE 8 [get_ports tmds_clk_p]
+set_property DRIVE 8 [get_ports tmds_clk_n]
+set_property DRIVE 8 [get_ports tmds_data_p[*]]
+set_property DRIVE 8 [get_ports tmds_data_n[*]]
+
+# ============================================================================
+# Configuration Settings
+# ============================================================================
+
+set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
+
+# HDMI TMDS pinleri DRIVE_STRENGTH desteklemiyor (TMDS_33 standardı)===============================
+
+# Yüksek performans için timing optimizasyonu
+set_property STRATEGY Performance_ExplorePostRoutePhysOpt [get_runs impl_1]
+CONFIG_VOLTAGE 3.3 [current_design]
+set_property CFGBVS VCCO [current_design]
