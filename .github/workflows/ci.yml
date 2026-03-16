@@ -1,0 +1,36 @@
+name: C Pipeline Tests
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get install -y gcc make libcfitsio-dev
+
+      - name: Build all
+        run: cd csrc && make clean && make all
+
+      - name: Run unit tests
+        run: cd csrc && make test
+
+      - name: Run benchmark (summary)
+        run: |
+          if grep -q 'benchmark' csrc/Makefile 2>/dev/null; then
+            cd csrc && make benchmark_ci || true
+          fi
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmark-results
+          path: docs/benchmark_results/
+          if-no-files-found: ignore
