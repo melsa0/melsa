@@ -18,8 +18,8 @@ extern "C" {
 
 /* ---- Return codes ---- */
 #define PST_OK          0
-#define PST_ERR_ALLOC  -1
-#define PST_ERR_PARAM  -2
+#define PST_ERR_PARAM  -1
+#define PST_ERR_ALLOC  -2
 #define PST_ERR_IO     -3
 
 /* ---- Types ---- */

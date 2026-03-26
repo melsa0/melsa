@@ -80,11 +80,13 @@ static float fast_median(float *arr, int n)
 
     if (n % 2 == 1)
         return quickselect(arr, n, n / 2);
-    else {
-        float lo = quickselect(arr, n, n / 2 - 1);
-        float hi = quickselect(arr, n, n / 2);
-        return 0.5f * (lo + hi);
-    }
+
+    /* Even count: find lower median, then scan for upper half minimum */
+    float lo = quickselect(arr, n, n / 2 - 1);
+    float hi = arr[n / 2];
+    for (int i = n / 2 + 1; i < n; i++)
+        if (arr[i] < hi) hi = arr[i];
+    return 0.5f * (lo + hi);
 }
 
 /* =================================================================
@@ -260,8 +262,11 @@ int image_write_bin(const char *path, const image_t *img)
     FILE *f = fopen(path, "wb");
     if (!f) return BKG2D_ERR_IO;
     int32_t hdr[2] = { (int32_t)img->width, (int32_t)img->height };
-    fwrite(hdr, sizeof(int32_t), 2, f);
-    fwrite(img->data, sizeof(float), (size_t)img->width * img->height, f);
+    size_t n = (size_t)img->width * img->height;
+    if (fwrite(hdr, sizeof(int32_t), 2, f) != 2 ||
+        fwrite(img->data, sizeof(float), n, f) != n) {
+        fclose(f); return BKG2D_ERR_IO;
+    }
     fclose(f);
     return BKG2D_OK;
 }
@@ -374,7 +379,6 @@ int write_bmp(const char *path, const image_t *img,
 
     int W = img->width, H = img->height;
     int row_bytes = ((W * 3 + 3) / 4) * 4;
-    int padding = row_bytes - W * 3;
     uint32_t img_size = (uint32_t)row_bytes * H;
     uint32_t file_size = 54 + img_size;
 
@@ -396,21 +400,30 @@ int write_bmp(const char *path, const image_t *img,
 
     float range = vmax - vmin;
     if (range < 1e-10f) range = 1.0f;
-    uint8_t pad[4] = {0};
+    float inv_range = 1.0f / range;
+
+    /* Row buffer: one fwrite per row instead of per pixel */
+    uint8_t *row_buf = (uint8_t *)malloc((size_t)row_bytes);
+    if (!row_buf) { fclose(f); return BKG2D_ERR_ALLOC; }
 
     for (int y = 0; y < H; y++) {
         int sy = H - 1 - y;
+        const float *src = img->data + sy * W;
         for (int x = 0; x < W; x++) {
-            float t = (img->data[sy * W + x] - vmin) / range;
-            if (t < 0) t = 0;
-            if (t > 1) t = 1;
+            float t = (src[x] - vmin) * inv_range;
+            if (t < 0.0f) t = 0.0f;
+            if (t > 1.0f) t = 1.0f;
             uint8_t r, g, b;
             cm(t, &r, &g, &b);
-            uint8_t bgr[3] = { b, g, r };
-            fwrite(bgr, 1, 3, f);
+            row_buf[x * 3 + 0] = b;
+            row_buf[x * 3 + 1] = g;
+            row_buf[x * 3 + 2] = r;
         }
-        if (padding > 0) fwrite(pad, 1, (size_t)padding, f);
+        /* Zero padding bytes */
+        for (int p = W * 3; p < row_bytes; p++) row_buf[p] = 0;
+        fwrite(row_buf, 1, (size_t)row_bytes, f);
     }
+    free(row_buf);
     fclose(f);
     return BKG2D_OK;
 }

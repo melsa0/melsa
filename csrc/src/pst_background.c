@@ -84,8 +84,11 @@ static float fast_median(float *arr, int n)
     if (n % 2 == 1) {
         return quickselect(arr, n, n / 2);
     }
+    /* Find lower median, then scan for upper half minimum */
     float lo = quickselect(arr, n, n / 2 - 1);
-    float hi = quickselect(arr, n, n / 2);
+    float hi = arr[n / 2];
+    for (int i = n / 2 + 1; i < n; i++)
+        if (arr[i] < hi) hi = arr[i];
     return 0.5f * (lo + hi);
 }
 
@@ -301,8 +304,11 @@ int pst_image_write_f32(const char *path, const pst_image_t *img)
     if (!f) { return PST_ERR_IO; }
 
     int32_t hdr[2] = { (int32_t)img->width, (int32_t)img->height };
-    fwrite(hdr, sizeof(int32_t), 2, f);
-    fwrite(img->data, sizeof(float), (size_t)img->width * (size_t)img->height, f);
+    size_t n = (size_t)img->width * (size_t)img->height;
+    if (fwrite(hdr, sizeof(int32_t), 2, f) != 2 ||
+        fwrite(img->data, sizeof(float), n, f) != n) {
+        fclose(f); return PST_ERR_IO;
+    }
     fclose(f);
     return PST_OK;
 }
