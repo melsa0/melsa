@@ -374,7 +374,9 @@ def main():
     print(f"\n[5] C pipeline calisiyor...")
     import subprocess
     prefix = os.path.join(test_dir, test_name)
-    cmd = ["./pipeline.exe", bin_path, "-b", str(args.box), "-f", str(args.filter), "-o", prefix]
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    exe_path = os.path.join(script_dir, "pipeline.exe")
+    cmd = [exe_path, bin_path, "-b", str(args.box), "-f", str(args.filter), "-o", prefix]
     proc = subprocess.run(cmd, capture_output=False, text=True)
 
     if proc.returncode != 0:

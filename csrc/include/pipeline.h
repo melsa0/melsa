@@ -102,6 +102,86 @@ void pl_image_percentile_range(const pl_image_t *img, float lo_pct, float hi_pct
 pl_image_t pl_image_log_stretch(const pl_image_t *img);
 pl_image_t pl_image_sqrt_stretch(const pl_image_t *img);
 
+/* =================================================================
+ *  DINAMIK (REAL-TIME) PIPELINE
+ *  - Baslangicta bir kez init, her frame'de feed, sonunda destroy
+ *  - Feed sirasinda SIFIR malloc
+ *  - IIR temporal background guncelleme
+ *  - Ring buffer: son N frame'i tutar (median background icin)
+ * ================================================================= */
+
+#define PL_RING_MAX  8  /* Ring buffer'da max frame sayisi */
+
+typedef struct {
+    /* Parametreler */
+    int width, height;
+    int box_size, filter_size;
+    float read_noise;
+    float alpha;            /* IIR katsayi: 0.05 = yavas, 0.2 = hizli */
+    float threshold_sigma;  /* 3.0 = 3-sigma */
+
+    /* On-alloc bufferlar (init'te ayrilir, feed'de tekrar kullanilir) */
+    pl_image_t background;  /* Guncel background tahmini */
+    pl_image_t subtracted;  /* Son frame'in subtracted hali */
+    pl_image_t thresholded; /* Threshold ustu piksel */
+    pl_image_t error_map;   /* Hata haritasi */
+
+    /* Ring buffer — son N frame'i tutar */
+    pl_image_t ring[PL_RING_MAX];
+    int   ring_size;        /* Kullanilacak ring boyutu (1..PL_RING_MAX) */
+    int   ring_head;        /* Sonraki yazilacak slot */
+    int   ring_count;       /* Dolu slot sayisi */
+
+    /* Bellek izleme */
+    size_t memory_bytes;    /* Toplam ayrilmis bellek (byte) */
+
+    float rms_median;       /* Guncel RMS */
+    int   frame_count;      /* Kac frame islendi */
+    int   is_initialized;   /* Background ilk frame'de hesaplandi mi */
+} pl_realtime_ctx_t;
+
+/* Frame sonucu */
+typedef struct {
+    int   n_above_threshold;  /* Threshold ustu piksel sayisi */
+    float rms_median;
+    float threshold;          /* Kullanilan threshold degeri */
+    float process_time_ms;    /* Bu frame'in isleme suresi */
+    size_t memory_bytes;      /* Toplam bellek kullanimi */
+    int   ring_fill;          /* Ring buffer dolulugu */
+} pl_frame_result_t;
+
+/**
+ * Realtime pipeline baslat — tum bellegi ayir.
+ * alpha: IIR katsayi (0.05 onerili, kucuk = yavas adaptasyon)
+ * ring_size: ring buffer buyuklugu (1..PL_RING_MAX, 0=devre disi)
+ */
+int pl_realtime_init(pl_realtime_ctx_t *ctx,
+                     int width, int height,
+                     int box_size, int filter_size,
+                     float read_noise, float alpha,
+                     float threshold_sigma,
+                     int ring_size);
+
+/**
+ * Bir frame isle — SIFIR malloc.
+ * Ilk frame'de tam background hesaplar, sonrakilerinde IIR gunceller.
+ * Ring buffer doluysa pixel-wise median background da hesaplanir.
+ * raw_data: width*height float array (disaridan, kopyalanmaz)
+ */
+int pl_realtime_feed(pl_realtime_ctx_t *ctx,
+                     const float *raw_data,
+                     pl_frame_result_t *result);
+
+/**
+ * Tum bellegi serbest birak.
+ */
+void pl_realtime_destroy(pl_realtime_ctx_t *ctx);
+
+/**
+ * Bellek kullanim raporu.
+ */
+size_t pl_realtime_memory_usage(const pl_realtime_ctx_t *ctx);
+
 #ifdef __cplusplus
 }
 #endif

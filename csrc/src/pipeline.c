@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -605,4 +606,212 @@ pl_image_t pl_image_sqrt_stretch(const pl_image_t *img)
         out.data[i] = (v > 0.0f) ? sqrtf(v) : 0.0f;
     }
     return out;
+}
+
+/* =================================================================
+ *  REALTIME PIPELINE
+ * ================================================================= */
+
+int pl_realtime_init(pl_realtime_ctx_t *ctx,
+                     int width, int height,
+                     int box_size, int filter_size,
+                     float read_noise, float alpha,
+                     float threshold_sigma,
+                     int ring_size)
+{
+    if (!ctx || width <= 0 || height <= 0) return PL_ERR_PARAM;
+    if (box_size < 2 || filter_size < 1 || filter_size % 2 == 0) return PL_ERR_PARAM;
+    if (ring_size < 0 || ring_size > PL_RING_MAX) return PL_ERR_PARAM;
+
+    memset(ctx, 0, sizeof(*ctx));
+    ctx->width = width;
+    ctx->height = height;
+    ctx->box_size = box_size;
+    ctx->filter_size = filter_size;
+    ctx->read_noise = read_noise;
+    ctx->alpha = alpha;
+    ctx->threshold_sigma = threshold_sigma;
+    ctx->ring_size = (ring_size > 0) ? ring_size : 0;
+    ctx->ring_head = 0;
+    ctx->ring_count = 0;
+    ctx->frame_count = 0;
+    ctx->is_initialized = 0;
+    ctx->memory_bytes = 0;
+
+    size_t img_bytes = (size_t)width * height * sizeof(float);
+
+    /* Cikti bufferlari */
+    ctx->background  = pl_image_alloc(width, height);
+    ctx->subtracted   = pl_image_alloc(width, height);
+    ctx->thresholded  = pl_image_alloc(width, height);
+    ctx->error_map    = pl_image_alloc(width, height);
+    ctx->memory_bytes += 4 * img_bytes;
+
+    if (!ctx->background.data || !ctx->subtracted.data ||
+        !ctx->thresholded.data || !ctx->error_map.data) {
+        pl_realtime_destroy(ctx);
+        return PL_ERR_ALLOC;
+    }
+
+    /* Ring buffer ayir */
+    for (int i = 0; i < ctx->ring_size; i++) {
+        ctx->ring[i] = pl_image_alloc(width, height);
+        if (!ctx->ring[i].data) {
+            pl_realtime_destroy(ctx);
+            return PL_ERR_ALLOC;
+        }
+        ctx->memory_bytes += img_bytes;
+    }
+
+    return PL_OK;
+}
+
+/* Ring buffer'dan pixel-wise median hesapla (sifir malloc, stack buffer) */
+static void ring_median_background(pl_realtime_ctx_t *ctx)
+{
+    int W = ctx->width, H = ctx->height;
+    size_t npx = (size_t)W * H;
+    int n = ctx->ring_count;
+    if (n < 2) return;
+
+    #ifdef _OPENMP
+    #pragma omp parallel for schedule(static)
+    #endif
+    for (size_t i = 0; i < npx; i++) {
+        float vals[PL_RING_MAX];
+        for (int k = 0; k < n; k++)
+            vals[k] = ctx->ring[k].data[i];
+
+        /* Insertion sort (n <= PL_RING_MAX = 8, cok hizli) */
+        for (int a = 1; a < n; a++) {
+            float key = vals[a];
+            int b = a - 1;
+            while (b >= 0 && vals[b] > key) { vals[b+1] = vals[b]; b--; }
+            vals[b+1] = key;
+        }
+        ctx->background.data[i] = (n % 2 == 1)
+            ? vals[n/2]
+            : 0.5f * (vals[n/2 - 1] + vals[n/2]);
+    }
+}
+
+int pl_realtime_feed(pl_realtime_ctx_t *ctx,
+                     const float *raw_data,
+                     pl_frame_result_t *result)
+{
+    if (!ctx || !raw_data || !result) return PL_ERR_PARAM;
+    if (!ctx->background.data) return PL_ERR_PARAM;
+
+    int W = ctx->width, H = ctx->height;
+    size_t npx = (size_t)W * H;
+
+    clock_t t_start = clock();
+
+    /* Ring buffer'a frame kopyala */
+    if (ctx->ring_size > 0) {
+        memcpy(ctx->ring[ctx->ring_head].data, raw_data, npx * sizeof(float));
+        ctx->ring_head = (ctx->ring_head + 1) % ctx->ring_size;
+        if (ctx->ring_count < ctx->ring_size) ctx->ring_count++;
+    }
+
+    if (!ctx->is_initialized) {
+        /* ---- ILK FRAME: tam background hesapla ---- */
+        pl_image_t input_wrap = { (float *)raw_data, W, H };
+        pl_bkg_result_t bkg_result;
+        int rc = pl_background_estimate(&input_wrap, ctx->box_size,
+                                         ctx->filter_size, &bkg_result);
+        if (rc != PL_OK) return rc;
+
+        memcpy(ctx->background.data, bkg_result.background.data,
+               npx * sizeof(float));
+        ctx->rms_median = bkg_result.rms_median;
+        pl_bkg_result_free(&bkg_result);
+        ctx->is_initialized = 1;
+
+    } else if (ctx->ring_size > 0 && ctx->ring_count >= 3) {
+        /* ---- RING BUFFER MODU: pixel-wise median ---- */
+        ring_median_background(ctx);
+
+        /* RMS guncelle */
+        double sum2 = 0.0; int cnt = 0;
+        float old_thresh = ctx->threshold_sigma * ctx->rms_median;
+        for (size_t i = 0; i < npx; i++) {
+            float sub = raw_data[i] - ctx->background.data[i];
+            if (sub < old_thresh) { sum2 += (double)sub * (double)sub; cnt++; }
+        }
+        if (cnt > 0) ctx->rms_median = (float)sqrt(sum2 / (double)cnt);
+
+    } else {
+        /* ---- IIR MODU: hizli guncelleme ---- */
+        float alpha = ctx->alpha;
+        float inv_alpha = 1.0f - alpha;
+        float thresh = ctx->threshold_sigma * ctx->rms_median;
+
+        #ifdef _OPENMP
+        #pragma omp parallel for schedule(static)
+        #endif
+        for (size_t i = 0; i < npx; i++) {
+            float raw_val = raw_data[i];
+            float sub = raw_val - ctx->background.data[i];
+            if (sub < thresh) {
+                ctx->background.data[i] = inv_alpha * ctx->background.data[i]
+                                        + alpha * raw_val;
+            }
+        }
+
+        /* RMS guncelle */
+        double sum_diff2 = 0.0; int count = 0;
+        for (size_t i = 0; i < npx; i++) {
+            float sub = raw_data[i] - ctx->background.data[i];
+            if (sub < thresh) { sum_diff2 += (double)sub * (double)sub; count++; }
+        }
+        if (count > 0) ctx->rms_median = (float)sqrt(sum_diff2 / (double)count);
+    }
+
+    /* ---- Subtract + error + threshold (tek gecis, sifir malloc) ---- */
+    float thresh = ctx->threshold_sigma * ctx->rms_median;
+    float rn2 = ctx->read_noise * ctx->read_noise;
+    int n_above = 0;
+
+    #ifdef _OPENMP
+    #pragma omp parallel for schedule(static) reduction(+:n_above)
+    #endif
+    for (size_t i = 0; i < npx; i++) {
+        float sub = raw_data[i] - ctx->background.data[i];
+        ctx->subtracted.data[i] = sub;
+        float v = (sub > 0.0f) ? sub : 0.0f;
+        ctx->error_map.data[i] = sqrtf(v + rn2) + 1e-6f;
+        if (sub >= thresh) { ctx->thresholded.data[i] = sub; n_above++; }
+        else               { ctx->thresholded.data[i] = 0.0f; }
+    }
+
+    clock_t t_end = clock();
+
+    ctx->frame_count++;
+    result->n_above_threshold = n_above;
+    result->rms_median = ctx->rms_median;
+    result->threshold = thresh;
+    result->process_time_ms = (float)(t_end - t_start) / (float)CLOCKS_PER_SEC * 1000.0f;
+    result->memory_bytes = ctx->memory_bytes;
+    result->ring_fill = ctx->ring_count;
+
+    return PL_OK;
+}
+
+void pl_realtime_destroy(pl_realtime_ctx_t *ctx)
+{
+    if (!ctx) return;
+    pl_image_free(&ctx->background);
+    pl_image_free(&ctx->subtracted);
+    pl_image_free(&ctx->thresholded);
+    pl_image_free(&ctx->error_map);
+    for (int i = 0; i < PL_RING_MAX; i++)
+        pl_image_free(&ctx->ring[i]);
+    memset(ctx, 0, sizeof(*ctx));
+}
+
+size_t pl_realtime_memory_usage(const pl_realtime_ctx_t *ctx)
+{
+    if (!ctx) return 0;
+    return ctx->memory_bytes;
 }
