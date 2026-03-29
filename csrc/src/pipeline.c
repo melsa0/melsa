@@ -609,6 +609,86 @@ pl_image_t pl_image_sqrt_stretch(const pl_image_t *img)
 }
 
 /* =================================================================
+ *  BAD PIXEL MASK & SATURATION
+ * ================================================================= */
+
+int pl_bad_pixel_detect(const pl_image_t *dark_frame,
+                        float dead_thresh, float hot_thresh,
+                        pl_image_t *mask)
+{
+    if (!dark_frame || !dark_frame->data || !mask) return PL_ERR_PARAM;
+    int W = dark_frame->width, H = dark_frame->height;
+    *mask = pl_image_alloc(W, H);
+    if (!mask->data) return PL_ERR_ALLOC;
+
+    size_t npx = (size_t)W * H;
+    int n_bad = 0;
+    for (size_t i = 0; i < npx; i++) {
+        float v = dark_frame->data[i];
+        if (v <= dead_thresh || v >= hot_thresh) {
+            mask->data[i] = 1.0f;
+            n_bad++;
+        } else {
+            mask->data[i] = 0.0f;
+        }
+    }
+    return n_bad;
+}
+
+int pl_bad_pixel_correct(pl_image_t *image, const pl_image_t *mask)
+{
+    if (!image || !image->data || !mask || !mask->data) return PL_ERR_PARAM;
+    int W = image->width, H = image->height;
+    int corrected = 0;
+
+    for (int y = 0; y < H; y++) {
+        for (int x = 0; x < W; x++) {
+            if (mask->data[y * W + x] < 0.5f) continue;
+            /* Komsu ortalamasi (3x3, sadece iyi pikseller) */
+            float sum = 0.0f;
+            int cnt = 0;
+            for (int dy = -1; dy <= 1; dy++) {
+                for (int dx = -1; dx <= 1; dx++) {
+                    if (dx == 0 && dy == 0) continue;
+                    int nx = x + dx, ny = y + dy;
+                    if (nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+                    if (mask->data[ny * W + nx] > 0.5f) continue;
+                    sum += image->data[ny * W + nx];
+                    cnt++;
+                }
+            }
+            if (cnt > 0) {
+                image->data[y * W + x] = sum / (float)cnt;
+                corrected++;
+            }
+        }
+    }
+    return corrected;
+}
+
+int pl_saturation_flag(const pl_image_t *image, float sat_level,
+                       pl_image_t *sat_mask, int *n_saturated)
+{
+    if (!image || !image->data || !sat_mask || !n_saturated) return PL_ERR_PARAM;
+    int W = image->width, H = image->height;
+    *sat_mask = pl_image_alloc(W, H);
+    if (!sat_mask->data) return PL_ERR_ALLOC;
+
+    size_t npx = (size_t)W * H;
+    int nsat = 0;
+    for (size_t i = 0; i < npx; i++) {
+        if (image->data[i] >= sat_level) {
+            sat_mask->data[i] = 1.0f;
+            nsat++;
+        } else {
+            sat_mask->data[i] = 0.0f;
+        }
+    }
+    *n_saturated = nsat;
+    return PL_OK;
+}
+
+/* =================================================================
  *  REALTIME PIPELINE
  * ================================================================= */
 
@@ -637,6 +717,8 @@ int pl_realtime_init(pl_realtime_ctx_t *ctx,
     ctx->frame_count = 0;
     ctx->is_initialized = 0;
     ctx->memory_bytes = 0;
+    ctx->has_bad_pixel_mask = 0;
+    ctx->saturation_level = 0.0f;
 
     size_t img_bytes = (size_t)width * height * sizeof(float);
 
@@ -706,6 +788,23 @@ int pl_realtime_feed(pl_realtime_ctx_t *ctx,
     size_t npx = (size_t)W * H;
 
     clock_t t_start = clock();
+
+    /* Bad pixel correction (mask varsa) */
+    int n_bad_corrected = 0;
+    if (ctx->has_bad_pixel_mask) {
+        /* raw_data const, subtracted buffer'i gecici olarak kullan */
+        memcpy(ctx->subtracted.data, raw_data, npx * sizeof(float));
+        n_bad_corrected = pl_bad_pixel_correct(&ctx->subtracted, &ctx->bad_pixel_mask);
+        raw_data = ctx->subtracted.data; /* duzeltilmis veriyi kullan */
+    }
+
+    /* Saturation tespiti */
+    int n_saturated = 0;
+    if (ctx->saturation_level > 0.0f) {
+        for (size_t i = 0; i < npx; i++) {
+            if (raw_data[i] >= ctx->saturation_level) n_saturated++;
+        }
+    }
 
     /* Ring buffer'a frame kopyala */
     if (ctx->ring_size > 0) {
@@ -794,8 +893,43 @@ int pl_realtime_feed(pl_realtime_ctx_t *ctx,
     result->process_time_ms = (float)(t_end - t_start) / (float)CLOCKS_PER_SEC * 1000.0f;
     result->memory_bytes = ctx->memory_bytes;
     result->ring_fill = ctx->ring_count;
+    result->n_saturated = n_saturated;
+    result->n_bad_corrected = n_bad_corrected;
 
     return PL_OK;
+}
+
+int pl_realtime_set_bad_pixel_mask(pl_realtime_ctx_t *ctx,
+                                    const float *dark_frame,
+                                    float dead_thresh, float hot_thresh)
+{
+    if (!ctx || !dark_frame) return PL_ERR_PARAM;
+    int W = ctx->width, H = ctx->height;
+    size_t npx = (size_t)W * H;
+
+    if (!ctx->has_bad_pixel_mask) {
+        ctx->bad_pixel_mask = pl_image_alloc(W, H);
+        if (!ctx->bad_pixel_mask.data) return PL_ERR_ALLOC;
+        ctx->memory_bytes += npx * sizeof(float);
+    }
+
+    int n_bad = 0;
+    for (size_t i = 0; i < npx; i++) {
+        float v = dark_frame[i];
+        if (v <= dead_thresh || v >= hot_thresh) {
+            ctx->bad_pixel_mask.data[i] = 1.0f;
+            n_bad++;
+        } else {
+            ctx->bad_pixel_mask.data[i] = 0.0f;
+        }
+    }
+    ctx->has_bad_pixel_mask = 1;
+    return n_bad;
+}
+
+void pl_realtime_set_saturation(pl_realtime_ctx_t *ctx, float sat_level)
+{
+    if (ctx) ctx->saturation_level = sat_level;
 }
 
 void pl_realtime_destroy(pl_realtime_ctx_t *ctx)
@@ -805,6 +939,7 @@ void pl_realtime_destroy(pl_realtime_ctx_t *ctx)
     pl_image_free(&ctx->subtracted);
     pl_image_free(&ctx->thresholded);
     pl_image_free(&ctx->error_map);
+    if (ctx->has_bad_pixel_mask) pl_image_free(&ctx->bad_pixel_mask);
     for (int i = 0; i < PL_RING_MAX; i++)
         pl_image_free(&ctx->ring[i]);
     memset(ctx, 0, sizeof(*ctx));

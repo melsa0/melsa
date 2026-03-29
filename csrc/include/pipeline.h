@@ -103,6 +103,33 @@ pl_image_t pl_image_log_stretch(const pl_image_t *img);
 pl_image_t pl_image_sqrt_stretch(const pl_image_t *img);
 
 /* =================================================================
+ *  BAD PIXEL MASK & SATURATION
+ * ================================================================= */
+
+/**
+ * Bad pixel haritasi olustur (hot/dead pixel tespiti).
+ * dead_thresh: bu degerden dusuk pikseller dead (ornegin 10)
+ * hot_thresh:  bu degerden yuksek pikseller hot (ornegin 60000)
+ * Cikti: mask (0=iyi, 1=kotu)
+ */
+int pl_bad_pixel_detect(const pl_image_t *dark_frame,
+                        float dead_thresh, float hot_thresh,
+                        pl_image_t *mask);
+
+/**
+ * Bad pixel mask uygula: kotu pikselleri komsu ortalamasi ile degistir.
+ */
+int pl_bad_pixel_correct(pl_image_t *image, const pl_image_t *mask);
+
+/**
+ * Saturation tespiti ve isleme.
+ * sat_level: doyma seviyesi (ornegin 65535 veya 4095)
+ * Doymus pikselleri isaretle, count dondur.
+ */
+int pl_saturation_flag(const pl_image_t *image, float sat_level,
+                       pl_image_t *sat_mask, int *n_saturated);
+
+/* =================================================================
  *  DINAMIK (REAL-TIME) PIPELINE
  *  - Baslangicta bir kez init, her frame'de feed, sonunda destroy
  *  - Feed sirasinda SIFIR malloc
@@ -126,6 +153,11 @@ typedef struct {
     pl_image_t thresholded; /* Threshold ustu piksel */
     pl_image_t error_map;   /* Hata haritasi */
 
+    /* Bad pixel mask (opsiyonel, NULL olabilir) */
+    pl_image_t bad_pixel_mask;  /* 0=iyi, 1=kotu */
+    int   has_bad_pixel_mask;
+    float saturation_level;     /* doyma seviyesi (0=devre disi) */
+
     /* Ring buffer — son N frame'i tutar */
     pl_image_t ring[PL_RING_MAX];
     int   ring_size;        /* Kullanilacak ring boyutu (1..PL_RING_MAX) */
@@ -148,6 +180,8 @@ typedef struct {
     float process_time_ms;    /* Bu frame'in isleme suresi */
     size_t memory_bytes;      /* Toplam bellek kullanimi */
     int   ring_fill;          /* Ring buffer dolulugu */
+    int   n_saturated;        /* Doymus piksel sayisi */
+    int   n_bad_corrected;    /* Duzeltilen bad pixel sayisi */
 } pl_frame_result_t;
 
 /**
@@ -171,6 +205,19 @@ int pl_realtime_init(pl_realtime_ctx_t *ctx,
 int pl_realtime_feed(pl_realtime_ctx_t *ctx,
                      const float *raw_data,
                      pl_frame_result_t *result);
+
+/**
+ * Bad pixel mask yukle (dark frame'den otomatik tespit).
+ * Init'ten sonra, feed'den once cagrilmali.
+ */
+int pl_realtime_set_bad_pixel_mask(pl_realtime_ctx_t *ctx,
+                                    const float *dark_frame,
+                                    float dead_thresh, float hot_thresh);
+
+/**
+ * Saturation seviyesi ayarla.
+ */
+void pl_realtime_set_saturation(pl_realtime_ctx_t *ctx, float sat_level);
 
 /**
  * Tum bellegi serbest birak.
