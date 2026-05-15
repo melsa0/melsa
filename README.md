@@ -1,198 +1,192 @@
-# CubeSat IMU Visualizer
+# 1U CubeSat IMU Görselleştirici
 
-ESP32 + MPU6050 IMU sensörünü hareket ettirince ekranda 1U CubeSat 3D model gerçek zamanlı döner.  
-WiFi üzerinden UDP ile veri iletimi, Mahony filtresi ile gyro drift'i düzeltilmiş attitude tahmini.
+ESP32 + MPU6050 ile gerçek zamanlı 3D yönelim takibi.  
+ESP32 kendi WiFi ağını açar (Access Point), PC ona bağlanır, tarayıcıda canlı görselleştirme yapar.
 
 ```
-[MPU6050] ──I2C──> [ESP32] ──WiFi UDP──> [Python Server] ──HTTP──> [Browser / Three.js]
+MPU6050 ──I2C──> ESP32 ──WiFi AP/TCP──> Python Server ──HTTP──> Tarayıcı / Three.js
 ```
 
 ---
 
-## Donanım Listesi
+## Donanım
 
-| Parça | Adet | Not |
-|---|---|---|
-| ESP32 DevKit (38-pin veya 30-pin) | 1 | Her ESP32 modeli çalışır |
-| MPU6050 breakout kartı | 1 | GY-521 modülü yaygın |
-| Jumper kablo (dişi-dişi) | 4 | |
-| USB Micro/Type-C kablo | 1 | ESP32'yi programlamak için |
+| Parça | Adet |
+|-------|------|
+| ESP32 (WROOM-32D veya muadili) | 1 |
+| MPU6050 breakout (GY-521) | 1 |
+| Jumper kablo | 4 |
+| USB kablo (data destekli) | 1 |
 
----
-
-## Kablolama
+### Kablolama
 
 ```
 MPU6050        ESP32
-──────────     ──────────────
-VCC     ──→   3.3V   (! 5V bağlama, bozulur)
+──────────     ──────────
+VCC     ──→   3.3V   (5V bağlama!)
 GND     ──→   GND
 SDA     ──→   GPIO 21
 SCL     ──→   GPIO 22
-AD0     ──→   GND    (I2C adresi 0x68 olur)
+AD0     ──→   GND    (I2C adresi 0x68)
 INT     ──    (bağlanmaz)
 ```
 
-> **Dikkat:** MPU6050 breakout kartının üzerinde genellikle 3.3V regülatör vardır;
-> bazı kartlara 5V da bağlayabilirsiniz. Kart üzerindeki "VCC" etiketine bakın.
-
 ---
 
-## Bilgisayar Gereksinimleri
+## Kurulum
 
-- **WSL2** (Windows Subsystem for Linux) — Ubuntu 20.04 veya 22.04
-- **Python 3.8+** (WSL içinde, genellikle hazır gelir)
-- **Arduino IDE 2.x** (Windows'ta)
+### 1. Arduino IDE — ESP32 board paketi
 
----
-
-## 1. Arduino IDE Kurulumu
-
-### 1.1 ESP32 board desteği ekle
-
-Arduino IDE → `File → Preferences → Additional boards manager URLs`:
+File → Preferences → Additional boards manager URLs:
 ```
 https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
 ```
-Sonra `Tools → Board → Boards Manager` → **esp32** ara → **Espressif Systems** → Install.
+Tools → Board → Boards Manager → `esp32 by Espressif Systems` → Install
 
-### 1.2 MPU6050 kütüphanesi
+Tools → Board → **ESP32 Dev Module**
 
-`Tools → Manage Libraries` → `MPU6050` ara → **MPU6050 by Electronic Cats** → Install.
+### 2. Kütüphane
+
+Tools → Manage Libraries → `MPU6050 by Electronic Cats` → Install
+
+### 3. CP2102 USB sürücüsü (ilk kurulumda)
+
+ESP32 COM portunda görünmüyorsa yönetici PowerShell'de:
+```powershell
+pnputil /add-driver "C:\...\silabser.inf" /install
+```
+veya SiLabs sitesinden `CP210x Universal Windows Driver` indir ve kur.
 
 ---
 
-## 2. ESP32 Kodunu Yükle
+## Çalıştırma (her seferinde)
 
-### 2.1 WSL IP'ni öğren
+### Adım 1 — ESP32'yi flash'la (ilk kurulumda veya değişiklik olunca)
 
-WSL terminalinde çalıştır:
-```bash
-hostname -I
+`esp32_imu_udp/esp32_imu_udp.ino` dosyasını Arduino IDE ile aç → Upload.
+
+Serial Monitor'da (115200 baud) şunu bekle:
 ```
-Çıktı örnek: `172.28.144.5 ...` — ilk IP'yi not al.
-
-### 2.2 Kodu düzenle
-
-`esp32_imu_udp/esp32_imu_udp.ino` dosyasını Arduino IDE ile aç.
-En üstteki 3 satırı değiştir:
-
-```cpp
-const char* WIFI_SSID = "EV_WIFISI";          // WiFi adın
-const char* WIFI_PASS = "WIFI_SIFRESI";        // WiFi şifren
-const char* SERVER_IP = "172.28.144.5";        // hostname -I çıktısı
-```
-
-### 2.3 Board seç ve yükle
-
-- `Tools → Board → ESP32 Arduino → ESP32 Dev Module`
-- `Tools → Port` → ESP32'nin COM portunu seç (aygıt yöneticisinde görünür)
-- `Upload` (→ ok butonu) tıkla
-
-Yükleme bittikten sonra `Tools → Serial Monitor` aç, **115200 baud** seç.  
-Şöyle bir çıktı görmelisin:
-```
-MPU6050 hazır
+MPU6050 hazir
 Kalibrasyon (sabit tutun)..........tamam!
-WiFi bağlanıyor: EV_WIFISI......
-Bağlandı! ESP32 IP: 192.168.1.42
-UDP → 172.28.144.5:4210
+AP acildi: IMU-SENSOR
+ESP32 IP: 192.168.4.1
+TCP sunucu port 4210 bekleniyor...
 ```
+> Kalibrasyon sırasında cihazı sabit tutun (~2 saniye).
 
-> **Önemli:** Kalibrasyon sırasında ESP32'yi/IMU'yu sabit tutun (2 saniye).
+### Adım 2 — PC'yi ESP32'nin WiFi'sine bağla
 
----
+- WiFi listesinde **IMU-SENSOR** ağını seç
+- Şifre: `imu12345`
 
-## 3. Python Server'ı Başlat
+### Adım 3 — Python sunucuyu başlat
 
-WSL terminalinde:
 ```bash
-cd ~/imu_vis
-python3 imu_server.py
+python imu_server.py
 ```
 
-Çıktı:
-```
-====================================================
-  IMU Visualizer — Mahony Filter (gyro + accel)
-  UDP 4210   ← ESP32 sends 'ax ay az gx gy gz'
-  HTTP 8765  → http://localhost:8765/imu_view.html
-  WSL IP: 172.28.144.5
-====================================================
-```
+### Adım 4 — Tarayıcıda aç
 
----
-
-## 4. Tarayıcıda Aç
-
-Windows tarayıcısında (Chrome, Edge):
 ```
 http://localhost:8765/imu_view.html
 ```
 
-ESP32 bağlı değilse 3 saniye sonra **DEMO animasyonu** başlar.  
-ESP32 bağlandığında sol üstte `● esp32:192.168.1.42` yazar.
+Sol üstte `● esp32:192.168.4.1` yazınca bağlantı kurulmuştur.  
+ESP32 bağlı değilse 3 saniye sonra otomatik DEMO animasyonu başlar.
 
 ---
 
-## Nasıl Çalışır?
+## Dosyalar
 
-### Veri Akışı
+| Dosya | Açıklama |
+|-------|----------|
+| `esp32_imu_udp/esp32_imu_udp.ino` | ESP32 firmware — WiFi AP, TCP sunucu, MPU6050 |
+| `imu_server.py` | Python sunucu — TCP client, Mahony filtresi, HTTP API |
+| `imu_view.html` | 3D görselleştirici — Three.js, MPU6050 board modeli |
+| `cubesat_stickers.html` | A4 baskıya hazır CubeSat sticker paketi |
+| `cubesat_print.scad` | 1U CubeSat gövdesi OpenSCAD modeli |
+| `cubesat_shelf.scad` | ESP32+MPU6050 montaj rafı (94.8×94.8×3mm) |
+
+---
+
+## Sistem Mimarisi
+
+### Veri akışı
+
 ```
-MPU6050 → I2C → ESP32 → WiFi UDP (50 Hz) → Python → HTTP JSON → Browser
+MPU6050
+  │ I2C 21/22, 50 Hz
+ESP32 (Access Point: 192.168.4.1)
+  │ TCP :4210 — "ax ay az gx gy gz\n"
+imu_server.py
+  │ Mahony filtresi → quaternion [w,x,y,z]
+  │ HTTP :8765
+imu_view.html (Three.js)
+  │ /data endpoint → quaternion → 3D model
+Tarayıcı
 ```
 
 ### Mahony Filtresi
-Sadece jiroskop kullanılsaydı zaman içinde açısal kayma (drift) oluşurdu.  
-İvmeölçer yerçekimi yönünü ölçer; Mahony filtresi bu iki kaynağı birleştirir:
+
+Gyro + ivmeölçer birleştirilerek drift-free quaternion üretilir:
 
 ```
-hata  = cross(accel_ölçüm, accel_tahmin_quaternion'dan)
+hata  = cross(accel_ölçüm, accel_tahmini)
 gyro_düzeltilmiş = gyro + Kp×hata + Ki×∫hata·dt
 quaternion += gyro_düzeltilmiş × dt
 ```
 
-Sonuç: hiç kayma olmayan, gerçek zamanlı attitude tahmini.
+- **Kp = 2.0** — sert düzeltme
+- **Ki = 0.005** — yavaş integral birikimi
+- Frekans: 50 Hz
 
-### Quaternion → 3D Rotasyon
-Server `[w, x, y, z]` quaternion gönderir.  
-Three.js tarayıcıda SLERP ile smooth interpolasyon yaparak modeli döndürür.
+### HTTP API
+
+| Endpoint | Açıklama |
+|----------|----------|
+| `GET /data` | Quaternion + sensör verisi (JSON) |
+| `GET /reset` | Yönelimi sıfırla |
+| `GET /imu_view.html` | Görselleştirici |
+
+`/data` format:
+```json
+{"q":[w,x,y,z], "gx":0.0,"gy":0.0,"gz":0.0, "ax":0.0,"ay":0.0,"az":0.0, "source":"esp32:192.168.4.1"}
+```
+
+---
+
+## 3D Baskı
+
+### CubeSat Gövdesi (`cubesat_print.scad`)
+
+OpenSCAD'de `PART` değişkenini ayarlayıp STL export et:
+
+```scad
+PART = "body";   // ana gövde
+PART = "lid";    // kapak
+PART = "panel";  // güneş paneli
+PART = "all";    // hepsi
+```
+
+### Montaj Rafı (`cubesat_shelf.scad`)
+
+94.8 × 94.8 × 3 mm. Gövde ortasına yerleştirilir, ESP32 + MPU6050 silikon ile sabitlenir.
+
+### Sticker Paketi (`cubesat_stickers.html`)
+
+Tarayıcıda açıp **Ctrl+P** — A4, 2 sayfa:
+- Sayfa 1: ÜST, ALT, ÖN, ARKA yüzler (100×100mm)
+- Sayfa 2: SOL, SAĞ yüzler + 2 güneş paneli (140×88mm)
 
 ---
 
 ## Sorun Giderme
 
 | Sorun | Çözüm |
-|---|---|
-| "MPU6050 bulunamadı" | SDA→GPIO21, SCL→GPIO22, VCC→3.3V kontrol et |
-| WiFi bağlanmıyor | SSID/şifre doğru mu? ESP32 2.4GHz ağda mı? |
-| UDP verisi gelmiyor | `hostname -I` ile WSL IP'ni tekrar kontrol et; Windows Firewall UDP 4210 portunu bloke ediyor olabilir |
-| Tarayıcıda "disconnected" | `python3 imu_server.py` çalışıyor mu? |
-| Model ters dönüyor | ESP32'yi IMU yönüne göre yerleştir veya SERVER'da eksen sıralamasını değiştir |
-| Çok fazla drift | Kalibrasyonda ESP32'yi daha uzun süre sabit tut |
-
-### Windows Firewall (UDP 4210 açma)
-PowerShell (yönetici):
-```powershell
-New-NetFirewallRule -DisplayName "IMU UDP" -Direction Inbound -Protocol UDP -LocalPort 4210 -Action Allow
-```
-
----
-
-## Dosya Yapısı
-
-```
-imu_vis/
-├── imu_server.py          # Python HTTP+UDP server, Mahony filtresi
-├── imu_view.html          # Three.js 1U CubeSat görselleştirici
-└── esp32_imu_udp/
-    └── esp32_imu_udp.ino  # Arduino sketch (ESP32 + MPU6050)
-```
-
----
-
-## Geliştirme Fikirleri
-
-- Magnetometre ekle (MPU9250 veya HMC5883L) → yaw drift de düzelir (Madgwick filtresi)
-- NOS3 entegrasyonu → simülatörde spacecraft attitude güncelleme
-- Accel verisinden linear hız entegrasyonu (dikkat: çok daha fazla drift)
+|-------|-------|
+| ESP32 COM portunda görünmüyor | CP2102 sürücüsünü kur |
+| "MPU6050 bulunamadı" | SDA→21, SCL→22, VCC→3.3V kontrol et |
+| WiFi ağı listede yok | ESP32'nin upload'u tamamlandı mı? Güçlü mü? |
+| `imu_server.py` bağlanamıyor | PC `IMU-SENSOR` ağında mı? `ping 192.168.4.1` çalışıyor mu? |
+| Model ters görünüyor | RESET butonuna bas, sensörü düz tut |

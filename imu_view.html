@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>1U CubeSat IMU Visualizer</title>
+<title>IMU Visualizer</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #050510; color: #e0e0f0; font-family: monospace; overflow: hidden; }
@@ -21,14 +21,9 @@
     background: rgba(10,20,50,0.85); border: 1px solid #3366aa;
     color: #88bbff; padding: 9px 32px; border-radius: 6px;
     cursor: pointer; font-size: 13px; letter-spacing: 1px;
-    backdrop-filter: blur(4px); transition: background 0.2s;
+    backdrop-filter: blur(4px);
   }
-  #btn-reset:hover { background: rgba(30,60,120,0.9); border-color: #66aaff; }
   #status { position: fixed; top: 16px; right: 16px; font-size: 12px; color: #446; }
-  #model-label {
-    position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%);
-    font-size: 11px; color: #336; letter-spacing: 2px;
-  }
 </style>
 </head>
 <body>
@@ -54,211 +49,101 @@
   z: <span class="val" id="az">0.0000</span><br>
 </div>
 
-<div id="model-label">1U CUBESAT</div>
 <button id="btn-reset" onclick="resetQuat()">RESET ORIENTATION</button>
 <div id="status">&#x25CF; waiting</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ── Renderer ──────────────────────────────────────────────────────────────
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-// ── Scene ─────────────────────────────────────────────────────────────────
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x050510);
 
 // Stars
 (function() {
   const geo = new THREE.BufferGeometry();
-  const verts = [];
+  const v = [];
   for (let i = 0; i < 2000; i++) {
     const r = 80 + Math.random() * 20;
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.acos(2 * Math.random() - 1);
-    verts.push(r * Math.sin(phi) * Math.cos(theta),
-               r * Math.cos(phi),
-               r * Math.sin(phi) * Math.sin(theta));
+    const t = Math.random() * Math.PI * 2;
+    const p = Math.acos(2 * Math.random() - 1);
+    v.push(r*Math.sin(p)*Math.cos(t), r*Math.cos(p), r*Math.sin(p)*Math.sin(t));
   }
-  geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(v, 3));
   scene.add(new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.15 })));
 })();
 
-// ── Camera ────────────────────────────────────────────────────────────────
 const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 200);
 camera.position.set(3.5, 2.5, 4.5);
 camera.lookAt(0, 0, 0);
 
-// ── Lights ────────────────────────────────────────────────────────────────
-scene.add(new THREE.AmbientLight(0x223355, 1.2));
-
+scene.add(new THREE.AmbientLight(0x334466, 1.5));
 const sun = new THREE.DirectionalLight(0xfff5e0, 2.0);
 sun.position.set(8, 10, 6);
-sun.castShadow = true;
 scene.add(sun);
 
-// Subtle blue fill from opposite side (earth-glow simulation)
-const fill = new THREE.DirectionalLight(0x2244aa, 0.4);
-fill.position.set(-5, -3, -4);
-scene.add(fill);
-
-// ── Origin axes (small) ───────────────────────────────────────────────────
 scene.add(new THREE.AxesHelper(1.2));
 
-// ── CubeSat group ─────────────────────────────────────────────────────────
 const sat = new THREE.Group();
 scene.add(sat);
 
-// Helper: box mesh
-function box(w, h, d, color, opts = {}) {
-  const mat = new THREE.MeshPhongMaterial({
-    color,
-    shininess: opts.shininess ?? 60,
-    emissive: opts.emissive ?? 0x000000,
-    emissiveIntensity: opts.emissiveIntensity ?? 0,
-  });
-  return new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
-}
+// ── MPU6050 GY-521 Board ──────────────────────────────────────────────────
+const BW = 2.0, BD = 1.5, BT = 0.1;
 
-// Helper: edge wireframe
-function edges(w, h, d, color) {
-  return new THREE.LineSegments(
-    new THREE.EdgesGeometry(new THREE.BoxGeometry(w, h, d)),
-    new THREE.LineBasicMaterial({ color })
-  );
-}
+// PCB
+sat.add(new THREE.Mesh(
+  new THREE.BoxGeometry(BW, BT, BD),
+  new THREE.MeshPhongMaterial({ color: 0x1a6b2a, shininess: 80 })
+));
+sat.add(new THREE.LineSegments(
+  new THREE.EdgesGeometry(new THREE.BoxGeometry(BW, BT, BD)),
+  new THREE.LineBasicMaterial({ color: 0x44ff88 })
+));
 
-// ── Main body (1U = 1.0 × 1.0 × 1.0) ─────────────────────────────────────
-const BODY = 1.0;
-const bodyMesh = box(BODY, BODY, BODY, 0x1a2a4a, { shininess: 90 });
-bodyMesh.castShadow = true;
-sat.add(bodyMesh);
-
-// Body edge glow
-const bodyEdge = edges(BODY, BODY, BODY, 0x3366cc);
-sat.add(bodyEdge);
-
-// Face panels (6 sides - thin overlay for detail)
-const faceColors = [0x1e3560, 0x1e3560, 0x162a50, 0x162a50, 0x1a3055, 0x1a3055];
-const faceDefs = [
-  [BODY+0.001, BODY, 0.001,  0, 0,  BODY/2],   // +Z
-  [BODY+0.001, BODY, 0.001,  0, 0, -BODY/2],   // -Z
-  [0.001, BODY+0.001, BODY,  BODY/2, 0, 0],    // +X
-  [0.001, BODY+0.001, BODY, -BODY/2, 0, 0],    // -X
-  [BODY+0.001, 0.001, BODY,  0,  BODY/2, 0],   // +Y
-  [BODY+0.001, 0.001, BODY,  0, -BODY/2, 0],   // -Y
-];
-faceDefs.forEach(([w,h,d,tx,ty,tz], i) => {
-  const m = box(w, h, d, faceColors[i], { shininess: 100 });
-  m.position.set(tx, ty, tz);
-  sat.add(m);
-});
-
-// ── Solar panels ──────────────────────────────────────────────────────────
-// Deployed symmetrically along ±X axis
-// Gold/amber solar cell color with animated shimmer
-const PANEL_W = 1.4;   // span along X
-const PANEL_H = 0.88;  // height (≈ body height)
-const PANEL_T = 0.025; // thickness
-
-const panelMats = [];  // keep refs for animation
-
-[-1, 1].forEach(side => {
-  const grp = new THREE.Group();
-  grp.position.set(side * (BODY / 2 + PANEL_W / 2 + 0.04), 0, 0);
-
-  // Panel substrate
-  const panelMat = new THREE.MeshPhongMaterial({
-    color: 0xc07010,
-    emissive: 0x402000,
-    emissiveIntensity: 0.3,
-    shininess: 160,
-  });
-  panelMats.push(panelMat);
-
-  const panelMesh = new THREE.Mesh(
-    new THREE.BoxGeometry(PANEL_W, PANEL_H, PANEL_T),
-    panelMat
-  );
-  grp.add(panelMesh);
-
-  // Cell grid lines (dark lines dividing solar cells)
-  const cellEdge = new THREE.LineSegments(
-    new THREE.EdgesGeometry(new THREE.BoxGeometry(PANEL_W, PANEL_H, PANEL_T)),
-    new THREE.LineBasicMaterial({ color: 0x1a0800 })
-  );
-  grp.add(cellEdge);
-
-  // Internal cell divisions (horizontal + vertical lines)
-  const lineMat = new THREE.LineBasicMaterial({ color: 0x3a1500 });
-  const COLS = 4, ROWS = 3;
-  for (let c = 1; c < COLS; c++) {
-    const x = -PANEL_W / 2 + c * (PANEL_W / COLS);
-    const g = new THREE.BufferGeometry().setFromPoints([
-      new THREE.Vector3(x, -PANEL_H / 2, PANEL_T / 2 + 0.001),
-      new THREE.Vector3(x,  PANEL_H / 2, PANEL_T / 2 + 0.001),
-    ]);
-    grp.add(new THREE.Line(g, lineMat));
-  }
-  for (let r = 1; r < ROWS; r++) {
-    const y = -PANEL_H / 2 + r * (PANEL_H / ROWS);
-    const g = new THREE.BufferGeometry().setFromPoints([
-      new THREE.Vector3(-PANEL_W / 2, y, PANEL_T / 2 + 0.001),
-      new THREE.Vector3( PANEL_W / 2, y, PANEL_T / 2 + 0.001),
-    ]);
-    grp.add(new THREE.Line(g, lineMat));
-  }
-
-  // Hinge strut (thin bar connecting panel to body)
-  const strut = box(0.08, 0.04, 0.04, 0x778899, { shininess: 120 });
-  strut.position.set(-side * (PANEL_W / 2 + 0.02), 0, 0);
-  grp.add(strut);
-
-  sat.add(grp);
-});
-
-// ── Antennas (UHF whip - 4 corner deployables) ────────────────────────────
-const antMat = new THREE.MeshPhongMaterial({ color: 0xbbccdd, shininess: 200 });
-[[-1,-1], [-1,1], [1,-1], [1,1]].forEach(([sx, sz]) => {
-  const whip = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.008, 0.004, 0.7, 6),
-    antMat
-  );
-  whip.position.set(sx * 0.42, 0.5 + 0.35, sz * 0.42);
-  whip.rotation.set(0.15 * sz, 0, 0.15 * sx);
-  sat.add(whip);
-});
-
-// ── Top antenna (patch / monopole) ────────────────────────────────────────
-const topAnt = new THREE.Mesh(
-  new THREE.CylinderGeometry(0.012, 0.012, 0.35, 8),
-  antMat
+// Chip
+const chip = new THREE.Mesh(
+  new THREE.BoxGeometry(0.6, 0.12, 0.6),
+  new THREE.MeshPhongMaterial({ color: 0x111111, shininess: 120 })
 );
-topAnt.position.set(0, 0.5 + 0.175, 0);
-sat.add(topAnt);
+chip.position.set(0.1, BT/2 + 0.06, 0);
+sat.add(chip);
 
-// Patch antenna base
-const patch = box(0.25, 0.02, 0.25, 0x445566, { shininess: 180 });
-patch.position.set(0, 0.5 + 0.01, 0);
-sat.add(patch);
+// Pin 1 nokta
+const dot = new THREE.Mesh(
+  new THREE.SphereGeometry(0.04, 8, 8),
+  new THREE.MeshPhongMaterial({ color: 0xffffff })
+);
+dot.position.set(0.32, BT/2 + 0.13, -0.22);
+sat.add(dot);
 
-// ── Body-frame axes ───────────────────────────────────────────────────────
-sat.add(new THREE.AxesHelper(0.9));
+// Pin header
+for (let i = 0; i < 8; i++) {
+  const pin = new THREE.Mesh(
+    new THREE.BoxGeometry(0.06, 0.3, 0.06),
+    new THREE.MeshPhongMaterial({ color: 0xddcc44, shininess: 200 })
+  );
+  pin.position.set(-BW/2 + 0.15 + i*0.24, -BT/2 - 0.15, BD/2 + 0.03);
+  sat.add(pin);
+}
 
-// ── Quaternion application ────────────────────────────────────────────────
-const targetQuat = new THREE.Quaternion(0, 0, 0, 1);
-const smoothQuat  = new THREE.Quaternion(0, 0, 0, 1);
+// Eksen okları
+sat.add(new THREE.ArrowHelper(new THREE.Vector3(1,0,0), new THREE.Vector3(0.1, BT/2+0.13, 0), 0.9, 0xff2222, 0.18, 0.1));
+sat.add(new THREE.ArrowHelper(new THREE.Vector3(0,1,0), new THREE.Vector3(0.1, BT/2+0.13, 0), 0.9, 0x22ff22, 0.18, 0.1));
+sat.add(new THREE.ArrowHelper(new THREE.Vector3(0,0,1), new THREE.Vector3(0.1, BT/2+0.13, 0), 0.9, 0x2222ff, 0.18, 0.1));
+
+// ── Quaternion ────────────────────────────────────────────────────────────
+const targetQuat = new THREE.Quaternion();
+const smoothQuat  = new THREE.Quaternion();
+const QFIX = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0), -Math.PI/2);
 
 function applyServerQuat(w, x, y, z) {
-  targetQuat.set(x, y, z, w);
+  targetQuat.set(x, y, z, w).premultiply(QFIX);
 }
 
 // ── Data fetch ────────────────────────────────────────────────────────────
-let lastError = 0;
 async function fetchData() {
   try {
     const r = await fetch('http://localhost:8765/data', { cache: 'no-store' });
@@ -271,59 +156,35 @@ async function fetchData() {
     document.getElementById('gx').textContent = d.gx.toFixed(4);
     document.getElementById('gy').textContent = d.gy.toFixed(4);
     document.getElementById('gz').textContent = d.gz.toFixed(4);
-    if (d.ax !== undefined) {
-      document.getElementById('ax').textContent = d.ax.toFixed(4);
-      document.getElementById('ay').textContent = d.ay.toFixed(4);
-      document.getElementById('az').textContent = d.az.toFixed(4);
-    }
+    document.getElementById('ax').textContent = d.ax.toFixed(4);
+    document.getElementById('ay').textContent = d.ay.toFixed(4);
+    document.getElementById('az').textContent = d.az.toFixed(4);
     document.getElementById('src-label').textContent = d.source;
     document.getElementById('status').style.color = '#4a4';
     document.getElementById('status').textContent = '● connected';
   } catch(e) {
-    if (Date.now() - lastError > 2000) {
-      document.getElementById('status').style.color = '#a44';
-      document.getElementById('status').textContent = '● disconnected';
-      document.getElementById('src-label').textContent = 'waiting for server...';
-      lastError = Date.now();
-    }
+    document.getElementById('status').style.color = '#a44';
+    document.getElementById('status').textContent = '● disconnected';
   }
 }
 setInterval(fetchData, 50);
 
-// ── Reset ─────────────────────────────────────────────────────────────────
 function resetQuat() {
   fetch('http://localhost:8765/reset');
   targetQuat.set(0, 0, 0, 1);
   smoothQuat.set(0, 0, 0, 1);
 }
 
-// ── Resize ────────────────────────────────────────────────────────────────
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// ── Render loop ───────────────────────────────────────────────────────────
-const clock = new THREE.Clock();
-
 function animate() {
   requestAnimationFrame(animate);
-  const t = clock.getElapsedTime();
-
-  // Shimmer solar panels - hue oscillates between amber and gold
-  const shimmer = 0.5 + 0.5 * Math.sin(t * 1.8);
-  const r = Math.round(0xb0 + shimmer * 0x30);
-  const g = Math.round(0x60 + shimmer * 0x20);
-  panelMats.forEach(m => {
-    m.color.setRGB(r / 255, g / 255, 0x10 / 255);
-    m.emissiveIntensity = 0.15 + shimmer * 0.25;
-  });
-
-  // Smooth quaternion
   smoothQuat.slerp(targetQuat, 0.12);
   sat.quaternion.copy(smoothQuat);
-
   renderer.render(scene, camera);
 }
 animate();

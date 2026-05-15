@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>CubeSat-1 · Sticker Pack</title>
+<style>
+@page { size: A4 portrait; margin: 5mm; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #999; font-family: 'Courier New', monospace; }
+.page { width: 200mm; background: white; margin: 0 auto 8mm; padding: 2mm; page-break-after: always; }
+.page:last-child { page-break-after: auto; }
+.grid2 { display: grid; grid-template-columns: 100mm 100mm; }
+.cap { font-size: 5.5pt; color: #888; text-align: center; padding: 1mm 0; letter-spacing: 0.4pt; text-transform: uppercase; }
+.pcap { font-size: 5.5pt; color: #888; text-align: center; padding: 2.5mm 0 0.5mm; letter-spacing: 0.4pt; text-transform: uppercase; }
+.face  { width: 100mm; height: 100mm; display: block; outline: 0.3mm dashed #bbb; }
+.panel { width: 140mm; height: 88mm;  display: block; outline: 0.3mm dashed #bbb; margin: 0 auto; }
+@media print {
+  body { background: white; }
+  .page { margin: 0; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ PAGE 1 ══════════════════════════ -->
+<div class="page">
+<div class="grid2">
+
+<!-- ╔══════════════════════════════╗
+     ║  TOP — Üst panel             ║
+     ║  Merkez hedef + anten delikleri ║
+     ╚══════════════════════════════╝ -->
+<div>
+<div class="cap">Üst Yüz · TOP</div>
+<svg class="face" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- engineering dot grid, 5mm spacing -->
+    <pattern id="g1" width="5" height="5" patternUnits="userSpaceOnUse">
+      <rect width="5" height="5" fill="#080E1A"/>
+      <circle cx="0" cy="0" r="0.22" fill="#1C3155"/>
+    </pattern>
+  </defs>
+  <rect width="100" height="100" fill="url(#g1)"/>
+  <!-- outer frame -->
+  <rect x="3" y="3" width="94" height="94" fill="none" stroke="#C9A227" stroke-width="0.5"/>
+  <!-- secondary inner frame -->
+  <rect x="7" y="7" width="86" height="86" fill="none" stroke="#C9A227" stroke-width="0.2" opacity="0.4"/>
+
+  <!-- corner antenna-hole markers -->
+  <!-- each at (12,12),(88,12),(12,88),(88,88) -->
+  <circle cx="12" cy="12" r="4"   fill="none" stroke="#C9A227" stroke-width="0.5"/>
+  <circle cx="12" cy="12" r="1.5" fill="none" stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="8"  y1="12" x2="16" y2="12" stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="12" y1="8"  x2="12" y2="16" stroke="#C9A227" stroke-width="0.35"/>
+
+  <circle cx="88" cy="12" r="4"   fill="none" stroke="#C9A227" stroke-width="0.5"/>
+  <circle cx="88" cy="12" r="1.5" fill="none" stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="84" y1="12" x2="92" y2="12" stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="88" y1="8"  x2="88" y2="16" stroke="#C9A227" stroke-width="0.35"/>
+
+  <circle cx="12" cy="88" r="4"   fill="none" stroke="#C9A227" stroke-width="0.5"/>
+  <circle cx="12" cy="88" r="1.5" fill="none" stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="8"  y1="88" x2="16" y2="88" stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="12" y1="84" x2="12" y2="92" stroke="#C9A227" stroke-width="0.35"/>
+
+  <circle cx="88" cy="88" r="4"   fill="none" stroke="#C9A227" stroke-width="0.5"/>
+  <circle cx="88" cy="88" r="1.5" fill="none" stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="84" y1="88" x2="92" y2="88" stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="88" y1="84" x2="88" y2="92" stroke="#C9A227" stroke-width="0.35"/>
+
+  <!-- midpoint edge marks -->
+  <line x1="48" y1="3"  x2="52" y2="3"  stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="48" y1="97" x2="52" y2="97" stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="3"  y1="48" x2="3"  y2="52" stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="97" y1="48" x2="97" y2="52" stroke="#C9A227" stroke-width="0.4"/>
+
+  <!-- center precision target -->
+  <circle cx="50" cy="50" r="18" fill="none" stroke="#00B4D8" stroke-width="0.4" opacity="0.5"/>
+  <circle cx="50" cy="50" r="12" fill="none" stroke="#00B4D8" stroke-width="0.35"/>
+  <circle cx="50" cy="50" r="6"  fill="none" stroke="#00B4D8" stroke-width="0.5"/>
+  <circle cx="50" cy="50" r="1.5" fill="#00B4D8"/>
+  <line x1="31" y1="50" x2="44" y2="50" stroke="#00B4D8" stroke-width="0.4"/>
+  <line x1="56" y1="50" x2="69" y2="50" stroke="#00B4D8" stroke-width="0.4"/>
+  <line x1="50" y1="31" x2="50" y2="44" stroke="#00B4D8" stroke-width="0.4"/>
+  <line x1="50" y1="56" x2="50" y2="69" stroke="#00B4D8" stroke-width="0.4"/>
+
+  <!-- diagonal tick marks at 45° around center ring -->
+  <line x1="41.5" y1="41.5" x2="44.5" y2="44.5" stroke="#00B4D8" stroke-width="0.3" opacity="0.6"/>
+  <line x1="55.5" y1="44.5" x2="58.5" y2="41.5" stroke="#00B4D8" stroke-width="0.3" opacity="0.6"/>
+  <line x1="41.5" y1="58.5" x2="44.5" y2="55.5" stroke="#00B4D8" stroke-width="0.3" opacity="0.6"/>
+  <line x1="55.5" y1="55.5" x2="58.5" y2="58.5" stroke="#00B4D8" stroke-width="0.3" opacity="0.6"/>
+
+  <!-- cut guides -->
+  <line x1="0" y1="3.5" x2="3.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="3.5" y1="0" x2="3.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="100" y1="3.5" x2="96.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="96.5" y1="0" x2="96.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="0" y1="96.5" x2="3.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="3.5" y1="100" x2="3.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="100" y1="96.5" x2="96.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="96.5" y1="100" x2="96.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+</svg>
+</div>
+
+<!-- ╔══════════════════════════════╗
+     ║  BOTTOM — Kapak              ║
+     ║  M3 vida delikleri (4 köşe)  ║
+     ╚══════════════════════════════╝ -->
+<div>
+<div class="cap">Alt Yüz · BOTTOM / Kapak</div>
+<svg class="face" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="g2" width="5" height="5" patternUnits="userSpaceOnUse">
+      <rect width="5" height="5" fill="#080E1A"/>
+      <circle cx="0" cy="0" r="0.22" fill="#1C3155"/>
+    </pattern>
+  </defs>
+  <rect width="100" height="100" fill="url(#g2)"/>
+  <rect x="3" y="3" width="94" height="94" fill="none" stroke="#C9A227" stroke-width="0.5"/>
+  <!-- lid perimeter reference (inside body wall) -->
+  <rect x="12" y="12" width="76" height="76" fill="none" stroke="#C9A227" stroke-width="0.25" stroke-dasharray="3,2" opacity="0.5"/>
+
+  <!-- M3 screw holes — CubeSat spec: 5mm from corner -->
+  <!-- TL: (5,5) from corner → center at (8,8)? Let's use 10,10 -->
+  <circle cx="10" cy="10" r="1.6" fill="none" stroke="#E0E0E0" stroke-width="0.6"/>
+  <circle cx="10" cy="10" r="4"   fill="none" stroke="#C9A227" stroke-width="0.35" stroke-dasharray="1.5,1"/>
+  <line x1="6"  y1="10" x2="14" y2="10" stroke="#E0E0E0" stroke-width="0.3"/>
+  <line x1="10" y1="6"  x2="10" y2="14" stroke="#E0E0E0" stroke-width="0.3"/>
+
+  <circle cx="90" cy="10" r="1.6" fill="none" stroke="#E0E0E0" stroke-width="0.6"/>
+  <circle cx="90" cy="10" r="4"   fill="none" stroke="#C9A227" stroke-width="0.35" stroke-dasharray="1.5,1"/>
+  <line x1="86" y1="10" x2="94" y2="10" stroke="#E0E0E0" stroke-width="0.3"/>
+  <line x1="90" y1="6"  x2="90" y2="14" stroke="#E0E0E0" stroke-width="0.3"/>
+
+  <circle cx="10" cy="90" r="1.6" fill="none" stroke="#E0E0E0" stroke-width="0.6"/>
+  <circle cx="10" cy="90" r="4"   fill="none" stroke="#C9A227" stroke-width="0.35" stroke-dasharray="1.5,1"/>
+  <line x1="6"  y1="90" x2="14" y2="90" stroke="#E0E0E0" stroke-width="0.3"/>
+  <line x1="10" y1="86" x2="10" y2="94" stroke="#E0E0E0" stroke-width="0.3"/>
+
+  <circle cx="90" cy="90" r="1.6" fill="none" stroke="#E0E0E0" stroke-width="0.6"/>
+  <circle cx="90" cy="90" r="4"   fill="none" stroke="#C9A227" stroke-width="0.35" stroke-dasharray="1.5,1"/>
+  <line x1="86" y1="90" x2="94" y2="90" stroke="#E0E0E0" stroke-width="0.3"/>
+  <line x1="90" y1="86" x2="90" y2="94" stroke="#E0E0E0" stroke-width="0.3"/>
+
+  <!-- center diamond reference -->
+  <polygon points="50,35 65,50 50,65 35,50"
+    fill="none" stroke="#C9A227" stroke-width="0.3" opacity="0.4"/>
+  <circle cx="50" cy="50" r="2" fill="none" stroke="#C9A227" stroke-width="0.4"/>
+
+  <!-- cut guides -->
+  <line x1="0" y1="3.5" x2="3.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="3.5" y1="0" x2="3.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="100" y1="3.5" x2="96.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="96.5" y1="0" x2="96.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="0" y1="96.5" x2="3.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="3.5" y1="100" x2="3.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="100" y1="96.5" x2="96.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="96.5" y1="100" x2="96.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+</svg>
+</div>
+
+</div><!-- row 1 -->
+<div class="grid2">
+
+<!-- ╔══════════════════════════════╗
+     ║  FRONT — Ön panel            ║
+     ║  PCB iz deseni + pad array   ║
+     ╚══════════════════════════════╝ -->
+<div>
+<div class="cap">Ön Yüz · FRONT</div>
+<svg class="face" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="g3" width="5" height="5" patternUnits="userSpaceOnUse">
+      <rect width="5" height="5" fill="#080E1A"/>
+      <circle cx="0" cy="0" r="0.22" fill="#1C3155"/>
+    </pattern>
+  </defs>
+  <rect width="100" height="100" fill="url(#g3)"/>
+  <rect x="3" y="3" width="94" height="94" fill="none" stroke="#C9A227" stroke-width="0.5"/>
+
+  <!-- horizontal bus traces -->
+  <line x1="10" y1="25" x2="90" y2="25" stroke="#00B4D8" stroke-width="0.4" opacity="0.5"/>
+  <line x1="10" y1="50" x2="90" y2="50" stroke="#00B4D8" stroke-width="0.4" opacity="0.5"/>
+  <line x1="10" y1="75" x2="90" y2="75" stroke="#00B4D8" stroke-width="0.4" opacity="0.5"/>
+
+  <!-- vertical traces -->
+  <line x1="25" y1="10" x2="25" y2="90" stroke="#00B4D8" stroke-width="0.3" opacity="0.3"/>
+  <line x1="50" y1="10" x2="50" y2="90" stroke="#00B4D8" stroke-width="0.3" opacity="0.3"/>
+  <line x1="75" y1="10" x2="75" y2="90" stroke="#00B4D8" stroke-width="0.3" opacity="0.3"/>
+
+  <!-- via pads at intersections -->
+  <circle cx="25" cy="25" r="1.8" fill="none" stroke="#C9A227" stroke-width="0.5"/>
+  <circle cx="50" cy="25" r="1.8" fill="none" stroke="#C9A227" stroke-width="0.5"/>
+  <circle cx="75" cy="25" r="1.8" fill="none" stroke="#C9A227" stroke-width="0.5"/>
+  <circle cx="25" cy="50" r="1.8" fill="none" stroke="#C9A227" stroke-width="0.5"/>
+  <circle cx="75" cy="50" r="1.8" fill="none" stroke="#C9A227" stroke-width="0.5"/>
+  <circle cx="25" cy="75" r="1.8" fill="none" stroke="#C9A227" stroke-width="0.5"/>
+  <circle cx="50" cy="75" r="1.8" fill="none" stroke="#C9A227" stroke-width="0.5"/>
+  <circle cx="75" cy="75" r="1.8" fill="none" stroke="#C9A227" stroke-width="0.5"/>
+
+  <!-- center connector pad array (6×2 pads) -->
+  <rect x="35" y="43" width="30" height="14" fill="none" stroke="#E0E0E0" stroke-width="0.5" rx="1"/>
+  <rect cx="50" cy="50" x="38" y="46" width="3" height="3" fill="#C9A227" opacity="0.7"/>
+  <rect x="42.5" y="46" width="3" height="3" fill="#C9A227" opacity="0.7"/>
+  <rect x="47"   y="46" width="3" height="3" fill="#C9A227" opacity="0.7"/>
+  <rect x="51.5" y="46" width="3" height="3" fill="#C9A227" opacity="0.7"/>
+  <rect x="56"   y="46" width="3" height="3" fill="#C9A227" opacity="0.7"/>
+  <!-- indicator notch on connector -->
+  <circle cx="37" cy="50" r="1" fill="#E0E0E0" opacity="0.7"/>
+
+  <!-- via fill dots at intersections -->
+  <circle cx="25" cy="25" r="0.6" fill="#C9A227"/>
+  <circle cx="50" cy="25" r="0.6" fill="#C9A227"/>
+  <circle cx="75" cy="25" r="0.6" fill="#C9A227"/>
+  <circle cx="25" cy="50" r="0.6" fill="#C9A227"/>
+  <circle cx="75" cy="50" r="0.6" fill="#C9A227"/>
+  <circle cx="25" cy="75" r="0.6" fill="#C9A227"/>
+  <circle cx="50" cy="75" r="0.6" fill="#C9A227"/>
+  <circle cx="75" cy="75" r="0.6" fill="#C9A227"/>
+
+  <!-- cut guides -->
+  <line x1="0" y1="3.5" x2="3.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="3.5" y1="0" x2="3.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="100" y1="3.5" x2="96.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="96.5" y1="0" x2="96.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="0" y1="96.5" x2="3.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="3.5" y1="100" x2="3.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="100" y1="96.5" x2="96.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="96.5" y1="100" x2="96.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+</svg>
+</div>
+
+<!-- ╔══════════════════════════════╗
+     ║  BACK — Arka panel           ║
+     ║  Serpantin iz + delik deseni ║
+     ╚══════════════════════════════╝ -->
+<div>
+<div class="cap">Arka Yüz · BACK</div>
+<svg class="face" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="g4" width="5" height="5" patternUnits="userSpaceOnUse">
+      <rect width="5" height="5" fill="#080E1A"/>
+      <circle cx="0" cy="0" r="0.22" fill="#1C3155"/>
+    </pattern>
+  </defs>
+  <rect width="100" height="100" fill="url(#g4)"/>
+  <rect x="3" y="3" width="94" height="94" fill="none" stroke="#C9A227" stroke-width="0.5"/>
+
+  <!-- vent / thermal hole pattern — 5×5 grid at center -->
+  <!-- holes: r=2.5, spaced 12mm, centered at 50,50 -->
+  <!-- grid: col -2,-1,0,+1,+2 → x = 26,38,50,62,74 -->
+  <circle cx="26" cy="26" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="38" cy="26" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="50" cy="26" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="62" cy="26" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="74" cy="26" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+
+  <circle cx="26" cy="38" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="38" cy="38" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="50" cy="38" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="62" cy="38" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="74" cy="38" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+
+  <circle cx="26" cy="50" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="38" cy="50" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="50" cy="50" r="2.5" fill="none" stroke="#00B4D8" stroke-width="0.6"/>
+  <circle cx="62" cy="50" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="74" cy="50" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+
+  <circle cx="26" cy="62" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="38" cy="62" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="50" cy="62" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="62" cy="62" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="74" cy="62" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+
+  <circle cx="26" cy="74" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="38" cy="74" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="50" cy="74" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="62" cy="74" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+  <circle cx="74" cy="74" r="2.5" fill="none" stroke="#E0E0E0" stroke-width="0.4"/>
+
+  <!-- corner registration marks -->
+  <line x1="8"  y1="8"  x2="14" y2="8"  stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="8"  y1="8"  x2="8"  y2="14" stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="92" y1="8"  x2="86" y2="8"  stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="92" y1="8"  x2="92" y2="14" stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="8"  y1="92" x2="14" y2="92" stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="8"  y1="92" x2="8"  y2="86" stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="92" y1="92" x2="86" y2="92" stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="92" y1="92" x2="92" y2="86" stroke="#C9A227" stroke-width="0.4"/>
+
+  <!-- cut guides -->
+  <line x1="0" y1="3.5" x2="3.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="3.5" y1="0" x2="3.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="100" y1="3.5" x2="96.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="96.5" y1="0" x2="96.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="0" y1="96.5" x2="3.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="3.5" y1="100" x2="3.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="100" y1="96.5" x2="96.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="96.5" y1="100" x2="96.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+</svg>
+</div>
+
+</div><!-- row 2 -->
+</div><!-- page 1 -->
+
+<!-- ══════════════════════════ PAGE 2 ══════════════════════════ -->
+<div class="page">
+<div class="grid2">
+
+<!-- ╔══════════════════════════════╗
+     ║  LEFT — Sol panel            ║
+     ║  Menteşe konumları           ║
+     ╚══════════════════════════════╝ -->
+<div>
+<div class="cap">Sol Yüz · LEFT / Kanat Menteşe</div>
+<svg class="face" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="g5" width="5" height="5" patternUnits="userSpaceOnUse">
+      <rect width="5" height="5" fill="#080E1A"/>
+      <circle cx="0" cy="0" r="0.22" fill="#1C3155"/>
+    </pattern>
+  </defs>
+  <rect width="100" height="100" fill="url(#g5)"/>
+  <rect x="3" y="3" width="94" height="94" fill="none" stroke="#C9A227" stroke-width="0.5"/>
+
+  <!-- hinge mount zone lines (left edge) -->
+  <rect x="3" y="3" width="18" height="94" fill="#0D1F3A" opacity="0.5"/>
+  <line x1="21" y1="3" x2="21" y2="97" stroke="#C9A227" stroke-width="0.3"/>
+
+  <!-- hinge positions: PANEL_H/4 = 22mm from center → y = 28 and y = 72 -->
+  <!-- hinge bracket outlines -->
+  <rect x="5" y="22" width="14" height="12" rx="1" fill="none" stroke="#00B4D8" stroke-width="0.7"/>
+  <circle cx="12" cy="28" r="3" fill="none" stroke="#00B4D8" stroke-width="0.6"/>
+  <circle cx="12" cy="28" r="1" fill="#00B4D8"/>
+
+  <rect x="5" y="66" width="14" height="12" rx="1" fill="none" stroke="#00B4D8" stroke-width="0.7"/>
+  <circle cx="12" cy="72" r="3" fill="none" stroke="#00B4D8" stroke-width="0.6"/>
+  <circle cx="12" cy="72" r="1" fill="#00B4D8"/>
+
+  <!-- vertical axis line between hinges -->
+  <line x1="12" y1="34" x2="12" y2="66" stroke="#00B4D8" stroke-width="0.4" stroke-dasharray="2,2"/>
+
+  <!-- horizontal reference lines -->
+  <line x1="21" y1="28" x2="90" y2="28" stroke="#C9A227" stroke-width="0.25" opacity="0.3"/>
+  <line x1="21" y1="72" x2="90" y2="72" stroke="#C9A227" stroke-width="0.25" opacity="0.3"/>
+  <line x1="21" y1="50" x2="90" y2="50" stroke="#C9A227" stroke-width="0.25" opacity="0.2"/>
+
+  <!-- right-side panel attachment marks -->
+  <line x1="88" y1="22" x2="94" y2="22" stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="88" y1="78" x2="94" y2="78" stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="97" y1="22" x2="97" y2="78" stroke="#C9A227" stroke-width="0.4"/>
+
+  <!-- corner registration -->
+  <line x1="8"  y1="8"  x2="14" y2="8"  stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="8"  y1="8"  x2="8"  y2="14" stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="92" y1="8"  x2="86" y2="8"  stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="92" y1="8"  x2="92" y2="14" stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="8"  y1="92" x2="14" y2="92" stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="8"  y1="92" x2="8"  y2="86" stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="92" y1="92" x2="86" y2="92" stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="92" y1="92" x2="92" y2="86" stroke="#C9A227" stroke-width="0.35"/>
+
+  <!-- cut guides -->
+  <line x1="0" y1="3.5" x2="3.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="3.5" y1="0" x2="3.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="100" y1="3.5" x2="96.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="96.5" y1="0" x2="96.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="0" y1="96.5" x2="3.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="3.5" y1="100" x2="3.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="100" y1="96.5" x2="96.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="96.5" y1="100" x2="96.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+</svg>
+</div>
+
+<!-- ╔══════════════════════════════╗
+     ║  RIGHT — Sağ panel (mirror)  ║
+     ╚══════════════════════════════╝ -->
+<div>
+<div class="cap">Sağ Yüz · RIGHT / Kanat Menteşe</div>
+<svg class="face" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="g6" width="5" height="5" patternUnits="userSpaceOnUse">
+      <rect width="5" height="5" fill="#080E1A"/>
+      <circle cx="0" cy="0" r="0.22" fill="#1C3155"/>
+    </pattern>
+  </defs>
+  <rect width="100" height="100" fill="url(#g6)"/>
+  <rect x="3" y="3" width="94" height="94" fill="none" stroke="#C9A227" stroke-width="0.5"/>
+
+  <!-- hinge zone (RIGHT edge) -->
+  <rect x="79" y="3" width="18" height="94" fill="#0D1F3A" opacity="0.5"/>
+  <line x1="79" y1="3" x2="79" y2="97" stroke="#C9A227" stroke-width="0.3"/>
+
+  <!-- hinge positions mirrored -->
+  <rect x="81" y="22" width="14" height="12" rx="1" fill="none" stroke="#00B4D8" stroke-width="0.7"/>
+  <circle cx="88" cy="28" r="3" fill="none" stroke="#00B4D8" stroke-width="0.6"/>
+  <circle cx="88" cy="28" r="1" fill="#00B4D8"/>
+
+  <rect x="81" y="66" width="14" height="12" rx="1" fill="none" stroke="#00B4D8" stroke-width="0.7"/>
+  <circle cx="88" cy="72" r="3" fill="none" stroke="#00B4D8" stroke-width="0.6"/>
+  <circle cx="88" cy="72" r="1" fill="#00B4D8"/>
+
+  <line x1="88" y1="34" x2="88" y2="66" stroke="#00B4D8" stroke-width="0.4" stroke-dasharray="2,2"/>
+
+  <!-- horizontal reference lines -->
+  <line x1="10" y1="28" x2="79" y2="28" stroke="#C9A227" stroke-width="0.25" opacity="0.3"/>
+  <line x1="10" y1="72" x2="79" y2="72" stroke="#C9A227" stroke-width="0.25" opacity="0.3"/>
+  <line x1="10" y1="50" x2="79" y2="50" stroke="#C9A227" stroke-width="0.25" opacity="0.2"/>
+
+  <!-- left-side panel attachment marks -->
+  <line x1="12" y1="22" x2="6" y2="22" stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="12" y1="78" x2="6" y2="78" stroke="#C9A227" stroke-width="0.4"/>
+  <line x1="3" y1="22" x2="3" y2="78" stroke="#C9A227" stroke-width="0.4"/>
+
+  <!-- corner registration -->
+  <line x1="8"  y1="8"  x2="14" y2="8"  stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="8"  y1="8"  x2="8"  y2="14" stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="92" y1="8"  x2="86" y2="8"  stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="92" y1="8"  x2="92" y2="14" stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="8"  y1="92" x2="14" y2="92" stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="8"  y1="92" x2="8"  y2="86" stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="92" y1="92" x2="86" y2="92" stroke="#C9A227" stroke-width="0.35"/>
+  <line x1="92" y1="92" x2="92" y2="86" stroke="#C9A227" stroke-width="0.35"/>
+
+  <!-- cut guides -->
+  <line x1="0" y1="3.5" x2="3.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="3.5" y1="0" x2="3.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="100" y1="3.5" x2="96.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="96.5" y1="0" x2="96.5" y2="3.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="0" y1="96.5" x2="3.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="3.5" y1="100" x2="3.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="100" y1="96.5" x2="96.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+  <line x1="96.5" y1="100" x2="96.5" y2="96.5" stroke="#aaa" stroke-width="0.3"/>
+</svg>
+</div>
+
+</div><!-- row 1 of page 2 -->
+
+<!-- ── SOLAR PANELS ── -->
+<div class="pcap">Sol Kanat · LEFT SOLAR ARRAY  (140 × 88 mm)</div>
+<svg class="panel" viewBox="0 0 140 88" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#1976D2"/>
+      <stop offset="50%"  stop-color="#0D47A1"/>
+      <stop offset="100%" stop-color="#082B6E"/>
+    </linearGradient>
+  </defs>
+  <rect width="140" height="88" fill="#050D1A"/>
+  <rect x="0"      y="0"     width="34.25" height="28.67" fill="url(#cg)"/>
+  <rect x="35.25"  y="0"     width="34.25" height="28.67" fill="url(#cg)"/>
+  <rect x="70.5"   y="0"     width="34.25" height="28.67" fill="url(#cg)"/>
+  <rect x="105.75" y="0"     width="34.25" height="28.67" fill="url(#cg)"/>
+  <rect x="0"      y="29.67" width="34.25" height="28.67" fill="url(#cg)"/>
+  <rect x="35.25"  y="29.67" width="34.25" height="28.67" fill="url(#cg)"/>
+  <rect x="70.5"   y="29.67" width="34.25" height="28.67" fill="url(#cg)"/>
+  <rect x="105.75" y="29.67" width="34.25" height="28.67" fill="url(#cg)"/>
+  <rect x="0"      y="59.33" width="34.25" height="28.67" fill="url(#cg)"/>
+  <rect x="35.25"  y="59.33" width="34.25" height="28.67" fill="url(#cg)"/>
+  <rect x="70.5"   y="59.33" width="34.25" height="28.67" fill="url(#cg)"/>
+  <rect x="105.75" y="59.33" width="34.25" height="28.67" fill="url(#cg)"/>
+  <rect x="34.25"  y="0"     width="1"   height="88" fill="#050D1A"/>
+  <rect x="69.5"   y="0"     width="1"   height="88" fill="#050D1A"/>
+  <rect x="104.75" y="0"     width="1"   height="88" fill="#050D1A"/>
+  <rect x="0"      y="28.67" width="140" height="1"  fill="#050D1A"/>
+  <rect x="0"      y="58.33" width="140" height="1"  fill="#050D1A"/>
+</svg>
+
+<div class="pcap">Sağ Kanat · RIGHT SOLAR ARRAY  (140 × 88 mm)</div>
+<svg class="panel" viewBox="0 0 140 88" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#1976D2"/>
+      <stop offset="50%"  stop-color="#0D47A1"/>
+      <stop offset="100%" stop-color="#082B6E"/>
+    </linearGradient>
+  </defs>
+  <rect width="140" height="88" fill="#050D1A"/>
+  <rect x="0"      y="0"     width="34.25" height="28.67" fill="url(#cg2)"/>
+  <rect x="35.25"  y="0"     width="34.25" height="28.67" fill="url(#cg2)"/>
+  <rect x="70.5"   y="0"     width="34.25" height="28.67" fill="url(#cg2)"/>
+  <rect x="105.75" y="0"     width="34.25" height="28.67" fill="url(#cg2)"/>
+  <rect x="0"      y="29.67" width="34.25" height="28.67" fill="url(#cg2)"/>
+  <rect x="35.25"  y="29.67" width="34.25" height="28.67" fill="url(#cg2)"/>
+  <rect x="70.5"   y="29.67" width="34.25" height="28.67" fill="url(#cg2)"/>
+  <rect x="105.75" y="29.67" width="34.25" height="28.67" fill="url(#cg2)"/>
+  <rect x="0"      y="59.33" width="34.25" height="28.67" fill="url(#cg2)"/>
+  <rect x="35.25"  y="59.33" width="34.25" height="28.67" fill="url(#cg2)"/>
+  <rect x="70.5"   y="59.33" width="34.25" height="28.67" fill="url(#cg2)"/>
+  <rect x="105.75" y="59.33" width="34.25" height="28.67" fill="url(#cg2)"/>
+  <rect x="34.25"  y="0"     width="1"   height="88" fill="#050D1A"/>
+  <rect x="69.5"   y="0"     width="1"   height="88" fill="#050D1A"/>
+  <rect x="104.75" y="0"     width="1"   height="88" fill="#050D1A"/>
+  <rect x="0"      y="28.67" width="140" height="1"  fill="#050D1A"/>
+  <rect x="0"      y="58.33" width="140" height="1"  fill="#050D1A"/>
+</svg>
+
+</div><!-- page 2 -->
+</body>
+</html>
