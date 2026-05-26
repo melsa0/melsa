@@ -31,12 +31,24 @@ Mahony filter: Kp=2.0, Ki=0.005, 50 Hz
 
 import argparse, http.server, json, threading, time, math, socket, os, sys
 
+# ── CRC-16/XMODEM — must match Arduino crc16_xmodem() ────────────────────────
+def crc16(data: str) -> int:
+    crc = 0xFFFF
+    for b in data.encode('ascii', errors='replace'):
+        crc ^= b << 8
+        for _ in range(8):
+            crc = ((crc << 1) ^ 0x1021) if (crc & 0x8000) else (crc << 1)
+        crc &= 0xFFFF
+    return crc
+
 # ── defaults ───────────────────────────────────────────────────────────────────
 DEFAULT_MODE   = "arduino"
 DEFAULT_PORT   = "COM3"
 ESP32_IP       = "192.168.4.1"
 ESP32_TCP_PORT = 4210
 HTTP_PORT      = 8765
+OUTLIER_LIMIT  = 2.5    # g — reject accel beyond MPU6050 ±2g range
+WINDUP_LIMIT   = 0.1    # rad/s — Ki integral anti-windup clamp
 
 # ── quaternion math ────────────────────────────────────────────────────────────
 def qmul(q, r):
@@ -74,6 +86,9 @@ KI = 0.005
 _eInt      = [0.0, 0.0, 0.0]
 _eInt_lock = threading.Lock()
 
+_stats      = {"packets_rx": 0, "crc_errors": 0, "outliers": 0, "crc_enabled": False}
+_stats_lock = threading.Lock()
+
 def mahony_update(q, gx, gy, gz, ax, ay, az, dt):
     """One Mahony filter step. Returns normalised quaternion."""
     global _eInt
@@ -93,6 +108,9 @@ def mahony_update(q, gx, gy, gz, ax, ay, az, dt):
             _eInt[0] += KI * ex * dt
             _eInt[1] += KI * ey * dt
             _eInt[2] += KI * ez * dt
+            _eInt[0] = max(-WINDUP_LIMIT, min(WINDUP_LIMIT, _eInt[0]))
+            _eInt[1] = max(-WINDUP_LIMIT, min(WINDUP_LIMIT, _eInt[1]))
+            _eInt[2] = max(-WINDUP_LIMIT, min(WINDUP_LIMIT, _eInt[2]))
             gx += KP*ex + _eInt[0]
             gy += KP*ey + _eInt[1]
             gz += KP*ez + _eInt[2]
@@ -224,13 +242,26 @@ def arduino_loop(port):
                 if line.startswith("#") or not line:
                     continue   # skip comment/header lines from Arduino
                 parts = line.split()
-                if len(parts) < 6:
+                if len(parts) < 10:
                     continue
                 try:
+                    if len(parts) == 11:
+                        data_str = " ".join(parts[:10])
+                        with _stats_lock:
+                            _stats["crc_enabled"] = True
+                            _stats["packets_rx"] += 1
+                        if crc16(data_str) != int(parts[10], 16):
+                            with _stats_lock:
+                                _stats["crc_errors"] += 1
+                            continue
                     ax, ay, az = float(parts[0]), float(parts[1]), float(parts[2])
                     gx, gy, gz = float(parts[3]), float(parts[4]), float(parts[5])
-                    ldr = [int(parts[i]) if i < len(parts) else 0 for i in range(6, 10)]
-                except ValueError:
+                    if any(abs(v) > OUTLIER_LIMIT for v in (ax, ay, az)):
+                        with _stats_lock:
+                            _stats["outliers"] += 1
+                        continue
+                    ldr = [int(parts[i]) for i in range(6, 10)]
+                except (ValueError, OverflowError):
                     continue
                 _update_state(ax, ay, az, gx, gy, gz, ldr, f"arduino:{port}", prev)
 
@@ -331,6 +362,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
             self.wfile.write(b"OK")
+        elif self.path == "/stats":
+            with _stats_lock:
+                self._send_json(dict(_stats))
         else:
             super().do_GET()
 
