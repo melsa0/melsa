@@ -129,31 +129,33 @@ Lux        = 500000 / R_ldr
 | ADC Değeri | R_LDR | Lux | Ortam |
 |------------|-------|-----|-------|
 | 50 | ~190 kΩ | ~3 | Karanlık oda |
-| 200 | ~40 kΩ | ~13 | Loş oda |
-| 500 | 10 kΩ | 50 | Ofis ışığı |
+| 200 | ~41 kΩ | 12 | Loş oda |
+| 500 | ~10.5 kΩ | 47 | Ofis ışığı |
 | 700 | ~4.4 kΩ | 114 | Aydınlık oda |
 | 850 | ~1.8 kΩ | 278 | Pencere yanı |
-| 950 | ~540 Ω | 926 | Açık gölge |
-| 1000 | ~230 Ω | ~2170 | Simüle güneş |
+| 950 | ~768 Ω | 651 | Açık gölge |
+| 1000 | ~230 Ω | 2173 | Simüle güneş |
 
 Pin başına en yüksek lux değeri → güneş yönü tahmini (+X, -X, +Y, -Y yüzü).
 
 ### Seri Port Çıktısı Formatı
 
 ```
-ax ay az gx gy gz ldr0 ldr1 ldr2 ldr3\n
-│   │   │   │   │   │   │    │    │    └── -Y yüzü lux (A3)
-│   │   │   │   │   │   │    │    └─────── +Y yüzü lux (A2)
-│   │   │   │   │   │   │    └──────────── -X yüzü lux (A1)
-│   │   │   │   │   │   └───────────────── +X yüzü lux (A0)
-│   │   │   │   │   └──────────────────── gz [rad/s]
-│   │   │   │   └──────────────────────── gy [rad/s]
-│   │   │   └──────────────────────────── gx [rad/s]
-│   │   └──────────────────────────────── az [g]
-│   └──────────────────────────────────── ay [g]
-└──────────────────────────────────────── ax [g]
+ax ay az gx gy gz ldr0 ldr1 ldr2 ldr3 CRC16\n
+│   │   │   │   │   │   │    │    │    │    └── CRC-16/CCITT-FALSE (4 hex basamak)
+│   │   │   │   │   │   │    │    │    └─────── -Y yüzü lux (A3)
+│   │   │   │   │   │   │    │    └──────────── +Y yüzü lux (A2)
+│   │   │   │   │   │   │    └───────────────── -X yüzü lux (A1)
+│   │   │   │   │   │   └────────────────────── +X yüzü lux (A0)
+│   │   │   │   │   └────────────────────────── gz [rad/s]
+│   │   │   │   └────────────────────────────── gy [rad/s]
+│   │   │   └────────────────────────────────── gx [rad/s]
+│   │   └────────────────────────────────────── az [g]
+│   └────────────────────────────────────────── ay [g]
+└────────────────────────────────────────────── ax [g]
 
 Hız: 50 Hz  |  Baud: 115200  |  '#' ile başlayan satırlar yorum
+LDR: her kanal 5-sample ADC ortalaması sonra lux'a dönüştürülür
 ```
 
 ---
@@ -180,6 +182,7 @@ Jiroskop + ivmeölçer birleştirilerek drift-free quaternion üretilir.
 | Kp | 2.0 | Hızlı düzeltme (ivmeölçer ağırlığı) |
 | Ki | 0.005 | Yavaş gyro drift giderimi |
 | Frekans | 50 Hz | Arduino çıkış hızıyla eşleşik |
+| Windup clamp | ±0.1 rad/s | eInt bileşenleri bu sınırda tutulur — uzun çalışmada bias birikmesi önlenir |
 
 ---
 
@@ -278,7 +281,15 @@ python imu_server.py --mode esp32
 python nos3/hardware_provider.py
 ```
 
-### 4. 3D Görselleştirici
+### 4. Test Paketi
+
+```bash
+python tests/test_suite.py
+```
+
+28 test: CRC-16 roundtrip/bozulma tespiti, quaternion normalizasyon, Mahony 60 sn stabilite, windup clamp, static drift, outlier sınırı, lux formülü spot-check.
+
+### 5. 3D Görselleştirici
 
 ```
 http://localhost:8765/imu_view.html
@@ -288,6 +299,8 @@ Sol üstte kaynak etiketi:
 - `● arduino:COM3` — Arduino bağlı
 - `● esp32:192.168.4.1` — ESP32 bağlı
 - `◌ DEMO` — Donanım yok, demo animasyon
+
+CRC hata oranını izlemek için: `http://localhost:8765/stats`
 
 ---
 
@@ -325,6 +338,7 @@ Sonra: `python imu_server.py --mode esp32`
 | `/reset` | GET | Quaternion'ı sıfırla |
 | `/config` | GET | Eksen eşleme ayarları |
 | `/config` | POST | Eksen eşleme güncelle |
+| `/stats` | GET | CRC hata sayısı, outlier, paket istatistikleri |
 | `/imu_view.html` | GET | Three.js 3D görselleştirici |
 
 ### GET /data — Örnek Yanıt
@@ -350,6 +364,12 @@ Sonra: `python imu_server.py --mode esp32`
 
 ---
 
+## Veri Güvenilirliği
+
+Her Arduino paketi, ilk 10 alanı kapsayan 4 hex-basamaklı **CRC-16/CCITT-FALSE** (poly=0x1021, init=0xFFFF) değeriyle biter; imu_server.py her pakette CRC'yi doğrular ve bozuk paketi atar. İvmeölçer değeri `|ax|, |ay|, |az| > 2.5 g` ise MPU6050 ölçüm aralığının (±2g) dışında sayılır ve **outlier rejection** ile filtrelenir. Her iki mekanizma da `GET /stats` endpoint'inde `packets_rx`, `crc_errors`, `outliers` olarak izlenebilir.
+
+---
+
 ## 3D Görselleştirici (imu_view.html)
 
 Three.js / WebGL tabanlı gerçek zamanlı CubeSat görünümü.
@@ -372,15 +392,17 @@ Three.js / WebGL tabanlı gerçek zamanlı CubeSat görünümü.
 bitirme/
 ├── README.md
 ├── arduino_uno/
-│   └── arduino_uno_imu.ino     HIL firmware — MPU6050 + LDR sun sensor
+│   └── arduino_uno_imu.ino     HIL firmware — MPU6050 + LDR (CRC-16, 5-sample MA)
 ├── esp32_imu_udp/
 │   └── esp32_imu_udp.ino       ESP32 exhibition display (WiFi AP + TCP)
-├── imu_server.py               Python server — Mahony filter, HTTP API
+├── imu_server.py               Python server — Mahony filter, CRC validate, HTTP API
 ├── imu_view.html               Three.js 3D visualizer
 ├── nos3/
 │   └── hardware_provider.py    NOS3 HIL bridge (imu_server → NOS3 UDP)
 ├── sample_data/
 │   └── imu_data.json           /data API örnek çıktısı + açıklamalar
+├── tests/
+│   └── test_suite.py           28 birim testi — CRC, quaternion, Mahony, lux
 ├── cubesat_print.scad          1U CubeSat gövdesi (OpenSCAD)
 ├── cubesat_shelf.scad          Arduino+MPU6050 montaj rafı (94.8×94.8×3mm)
 └── cubesat_stickers.html       A4 baskıya hazır yüz etiketleri
