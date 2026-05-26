@@ -1,0 +1,121 @@
+{
+  "_info": "CubeSat IMU Server — GET /data endpoint sample response (Arduino HIL mode)",
+
+  "q":   [0.9971, 0.0523, 0.0349, 0.0175],
+  "ax":   0.03241,
+  "ay":  -0.01876,
+  "az":   0.99812,
+  "gx":   0.00231,
+  "gy":  -0.00087,
+  "gz":   0.00145,
+  "ldr": [823, 145, 612, 89],
+  "lux":  823,
+  "source": "arduino:COM3",
+  "t":   42.5,
+
+  "_quaternion": {
+    "format": "[w, x, y, z]  — unit quaternion  w²+x²+y²+z² = 1",
+    "magnitude_check": "0.9971²+0.0523²+0.0349²+0.0175² ≈ 1.000",
+    "euler_approx": {
+      "roll_deg":   6.0,
+      "pitch_deg":  4.0,
+      "yaw_deg":    2.0
+    }
+  },
+
+  "_accel": {
+    "unit": "g  (1 g = 9.80665 m/s²)",
+    "range": "±2g  →  16384 LSB/g",
+    "az_note": "az≈1.0 g means sensor is upright (gravity pointing in -Z body frame)"
+  },
+
+  "_gyro": {
+    "unit": "rad/s",
+    "range": "±250°/s  →  131 LSB/(°/s)  →  ×(π/180) = rad/s",
+    "offset_removal": "500-sample calibration average subtracted at startup"
+  },
+
+  "_ldr": {
+    "faces": {
+      "ldr[0]": "+X face  (A0) : 823 lux — dominant, sun direction ≈ +X",
+      "ldr[1]": "-X face  (A1) : 145 lux",
+      "ldr[2]": "+Y face  (A2) : 612 lux",
+      "ldr[3]": "-Y face  (A3) :  89 lux"
+    },
+    "lux_field": "max(ldr) — lux of the brightest face",
+    "lux_formula": {
+      "circuit": "5V → LDR → ADC_pin → 10kΩ (R_fixed) → GND",
+      "R_ldr_ohm": "R_fixed × (1023 − ADC) / ADC",
+      "lux": "500000 / R_ldr",
+      "table": {
+        "ADC=50":   "R_ldr≈190kΩ  →    3 lux  (dark room)",
+        "ADC=200":  "R_ldr≈40kΩ   →   13 lux  (dim room)",
+        "ADC=500":  "R_ldr=10kΩ   →   50 lux  (office light)",
+        "ADC=700":  "R_ldr≈4.4kΩ  →  114 lux  (bright room)",
+        "ADC=850":  "R_ldr≈1.8kΩ  →  278 lux  (near window)",
+        "ADC=950":  "R_ldr≈540Ω   →  926 lux  (outdoor shade)",
+        "ADC=1000": "R_ldr≈230Ω   → 2174 lux  (simulated sunlight)"
+      }
+    }
+  },
+
+  "_mahony_filter": {
+    "Kp": 2.0,
+    "Ki": 0.005,
+    "freq_hz": 50,
+    "algorithm": [
+      "1. Normalise accel vector: a_norm = a / |a|",
+      "2. Estimate gravity from q: g_est = [2(xz-wy), 2(yz+wx), w²-x²-y²+z²]",
+      "3. Error: e = cross(a_norm, g_est)   (cross-product in body frame)",
+      "4. Integral: eInt += Ki × e × dt",
+      "5. Correct gyro: gyro_corr = gyro + Kp×e + eInt",
+      "6. Delta quaternion: dq from gyro_corr over dt",
+      "7. Update: q = normalise(q ⊗ dq)"
+    ],
+    "tuning": {
+      "Kp_effect": "Higher Kp → faster correction from accel, more noise sensitivity",
+      "Ki_effect": "Higher Ki → faster gyro bias removal, risk of integral windup",
+      "drift_rejection": "Gyro drift corrected via accelerometer gravity reference"
+    }
+  },
+
+  "_value_ranges": {
+    "accel_g":    {"min": -2.0,   "max": 2.0,   "lsb_per_g": 16384},
+    "gyro_rad_s": {"min": -4.363, "max": 4.363, "lsb_per_dps": 131},
+    "ldr_lux":    {"min": 0,      "max": 5000,  "note": "practical max ~2000 lux indoor simulation"},
+    "quaternion": {"magnitude": 1.0, "components": 4}
+  },
+
+  "_pins": {
+    "MPU6050": {
+      "SDA": "A4 (Arduino Uno pin 18)",
+      "SCL": "A5 (Arduino Uno pin 19)",
+      "VCC": "3.3V  — DO NOT use 5V",
+      "GND": "GND",
+      "AD0": "GND  (sets I²C address to 0x68)",
+      "INT": "not connected"
+    },
+    "LDR_sun_sensor": {
+      "A0": "+X face",
+      "A1": "-X face",
+      "A2": "+Y face",
+      "A3": "-Y face",
+      "circuit": "5V → LDR → pin → 10kΩ → GND  (R_fixed at bottom)"
+    }
+  },
+
+  "_serial_format": {
+    "baud": 115200,
+    "line": "ax ay az gx gy gz ldr0 ldr1 ldr2 ldr3\\n",
+    "comment_lines": "lines starting with '#' are skipped by imu_server.py",
+    "rate_hz": 50
+  },
+
+  "_ccsds_packet": {
+    "primary_header_6B":   "APID (11b) | seq_flags (2b) | seq_count (14b) | data_length (16b)",
+    "secondary_header_10B": "MET_seconds (32b) | MET_subseconds (16b) | padding (32b)",
+    "telemetry_port": 2006,
+    "command_port":   2005,
+    "apps": ["GENERIC_IMU", "GENERIC_CSS", "GENERIC_THERMAL"]
+  }
+}
