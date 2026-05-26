@@ -8,10 +8,11 @@
                           Circuit: 5V → LDR → pin → 10kΩ → GND
 
   Output (USB serial, 115200 baud, 50 Hz):
-    ax ay az gx gy gz ldr0 ldr1 ldr2 ldr3
+    ax ay az gx gy gz ldr0 ldr1 ldr2 ldr3 CRC16
     ├── ax/ay/az  : acceleration [g],  float, 5 decimal places
     ├── gx/gy/gz  : angular rate [rad/s], float, 5 decimal places
-    └── ldr0-3    : lux estimate per face, integer
+    ├── ldr0-3    : lux estimate per face (5-sample moving average), integer
+    └── CRC16     : CRC-16/XMODEM over first 10 fields, 4 hex digits
 
   Lines starting with '#' are comments — imu_server.py skips them.
 
@@ -64,6 +65,12 @@ const long   R_FIXED = 10000L;  // Ω
 const uint8_t LDR_PINS[4] = { A0, A1, A2, A3 };
 // Face mapping:  [0]=+X  [1]=-X  [2]=+Y  [3]=-Y
 // Dominant face with highest lux = approximate sun direction
+
+// ── LDR moving average (5-sample ring buffer, averages ADC before lux conversion) ──
+const int LDR_MA_N = 5;
+int _ldr_raw[4][LDR_MA_N];
+int _ldr_idx  = 0;
+bool _ldr_full = false;
 
 // ── Calibration ───────────────────────────────────────────────────────────────
 const int CALIB_N = 500;
@@ -129,6 +136,17 @@ void calibrate() {
   Serial.println(gz_off,1);
 }
 
+// ── CRC-16/XMODEM (poly 0x1021, init 0xFFFF) ─────────────────────────────────
+uint16_t crc16_xmodem(const char *s, int len) {
+  uint16_t crc = 0xFFFF;
+  while (len--) {
+    crc ^= (uint8_t)(*s++) << 8;
+    for (int i = 0; i < 8; i++)
+      crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
+  }
+  return crc;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 void setup() {
   Serial.begin(115200);
@@ -178,16 +196,27 @@ void loop() {
   float gy = (gy_r - gy_off) * G_SCALE;
   float gz = (gz_r - gz_off) * G_SCALE;
 
-  // ── LDR sun sensor read ───────────────────────────────────────────────────
+  // ── LDR sun sensor read (5-sample moving average on ADC, then lux) ─────────
+  for (int i = 0; i < 4; i++)
+    _ldr_raw[i][_ldr_idx] = analogRead(LDR_PINS[i]);
+  _ldr_idx++;
+  if (_ldr_idx >= LDR_MA_N) { _ldr_idx = 0; _ldr_full = true; }
+  int n_avg = _ldr_full ? LDR_MA_N : _ldr_idx;
   int lux[4];
-  for (int i = 0; i < 4; i++) lux[i] = adc_to_lux(analogRead(LDR_PINS[i]));
+  for (int i = 0; i < 4; i++) {
+    long sum = 0;
+    for (int j = 0; j < n_avg; j++) sum += _ldr_raw[i][j];
+    lux[i] = adc_to_lux((int)(sum / n_avg));
+  }
 
-  // ── Serial output ─────────────────────────────────────────────────────────
-  // Format: "ax ay az gx gy gz ldr0 ldr1 ldr2 ldr3\n"
+  // ── Serial output — Format: "ax ay az gx gy gz ldr0 ldr1 ldr2 ldr3 CRC16\n"
   char buf[100];
-  snprintf(buf, sizeof(buf),
+  int n = snprintf(buf, sizeof(buf),
     "%.5f %.5f %.5f %.5f %.5f %.5f %d %d %d %d",
     ax, ay, az, gx, gy, gz,
     lux[0], lux[1], lux[2], lux[3]);
-  Serial.println(buf);
+  uint16_t crc = crc16_xmodem(buf, n);
+  char out[120];
+  snprintf(out, sizeof(out), "%s %04X", buf, crc);
+  Serial.println(out);
 }
